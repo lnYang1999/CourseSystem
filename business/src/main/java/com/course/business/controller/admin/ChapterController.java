@@ -16,14 +16,14 @@ import java.util.List;
  * @create: 2021/03/14
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/chapter")
 public class ChapterController {
 
     @Resource
     private ChapterService chapterService;
 
-    @RequestMapping("/chapter")
-    public List<ChapterDto> chapter() {
+    @RequestMapping("/list")
+    public List<ChapterDto> list() {
         return chapterService.list();
     }
 }
