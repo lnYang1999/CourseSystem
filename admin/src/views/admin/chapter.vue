@@ -14,8 +14,8 @@
     <tbody>
     <tr v-for="chapter in chapters">
       <td>{{chapter.id}}</td>
-      <td>{{chapter.id}}</td>
-      <td>{{chapter.id}}</td>
+      <td>{{chapter.name}}</td>
+      <td>{{chapter.courseId}}</td>
       <td>
         <div class="hidden-sm hidden-xs btn-group">
           <button class="btn btn-xs btn-success">
