@@ -38,30 +38,6 @@
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
           </div>
-
-          <div class="hidden-md hidden-lg">
-            <div class="inline pos-rel">
-              <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
-                <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
-                <li>
-                  <a v-on:click="edit(chapter)" class="tooltip-success" data-rel="tooltip" title="Edit">
-                                  <span class="green">
-                                    <i class="ace-icon fa fa-pencil-square-o bigger-120"></i>
-                                  </span>
-                  </a>
-                </li>
-                <li>
-                  <a v-on:click="del(chapter.id)" class="tooltip-error" data-rel="tooltip" title="Delete">
-                                  <span class="red">
-                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
-                                  </span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
         </td>
       </tr>
       </tbody>
@@ -120,18 +96,27 @@ export default {
 
   },
   methods: {
+    /**
+     * 点击【新增】
+     */
     add() {
       let _this = this;
       _this.chapter = {};
       $("#form-modal").modal("show");
     },
 
+    /**
+     * 点击【编辑】
+     */
     edit(chapter) {
       let _this = this;
-      _this.chapter = $.extend({},chapter);
+      _this.chapter = $.extend({}, chapter);
       $("#form-modal").modal("show");
     },
 
+    /**
+     * 列表查询
+     */
     list(page) {
       let _this = this;
       Loading.show();
@@ -140,7 +125,6 @@ export default {
         size: _this.$refs.pagination.size,
       }).then((response)=>{
         Loading.hide();
-        console.log("查询大章列表结果：", response);
         let resp = response.data;
         _this.chapters = resp.content.list;
         _this.$refs.pagination.render(page, resp.content.total);
@@ -148,7 +132,10 @@ export default {
       })
     },
 
-    save() {
+    /**
+     * 点击【保存】
+     */
+    save(page) {
       let _this = this;
 
       // 保存校验
@@ -159,29 +146,28 @@ export default {
       }
 
       Loading.show();
-      _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save',
-          _this.chapter).then((response)=>{
+      _this.$ajax.post('http://127.0.0.1:9000/business/admin/chapter/save', _this.chapter).then((response)=>{
         Loading.hide();
-        console.log("保存大章列表结果：", response);
         let resp = response.data;
-        if(resp.success)
-        {
+        if (resp.success) {
           $("#form-modal").modal("hide");
           _this.list(1);
           Toast.success("保存成功！");
-        }else{
-          Toast.warning(resp.message);
+        } else {
+          Toast.warning(resp.message)
         }
       })
     },
 
+    /**
+     * 点击【删除】
+     */
     del(id) {
       let _this = this;
-      Confirm.show("删除大章后不可恢复，确认删除？",function (){
+      Confirm.show("删除大章后不可恢复，确认删除？", function () {
         Loading.show();
         _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response)=>{
           Loading.hide();
-          console.log("删除大章列表结果：", response);
           let resp = response.data;
           if (resp.success) {
             _this.list(1);
@@ -189,29 +175,6 @@ export default {
           }
         })
       });
-
-      // Swal.fire({
-      //   title: '确认删除？',
-      //   text: "删除后不可恢复，确认删除？",
-      //   icon: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3085d6',
-      //   cancelButtonColor: '#d33',
-      //   confirmButtonText: '确认!'
-      // }).then((result) => {
-      //   if (result.value) {
-      //     Loading.show();
-      //     _this.$ajax.delete('http://127.0.0.1:9000/business/admin/chapter/delete/' + id).then((response)=>{
-      //       Loading.hide();
-      //       console.log("删除大章列表结果：", response);
-      //       let resp = response.data;
-      //       if (resp.success) {
-      //         _this.list(1);
-      //         Toast.success("删除成功！");
-      //       }
-      //     })
-      //   }
-      // })
     }
   }
 }
