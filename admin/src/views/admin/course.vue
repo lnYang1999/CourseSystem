@@ -262,7 +262,7 @@ export default {
           || !Validator.require(_this.course.name, "名称")
           || !Validator.length(_this.course.name, "名称", 1, 50)
           || !Validator.length(_this.course.summary, "概述", 1, 2000)
-          || !Validator.length(_this.course.image, "封面", 1, 1000)
+          || !Validator.length(_this.course.image, "封面", 1, 100)
       ) {
         return;
       }
@@ -300,11 +300,11 @@ export default {
     },
 
     /**
-     * 点击【编辑】
+     * 点击【大章】
      */
     toChapter(course) {
       let _this = this;
-      SessionStorage.set("course",course);
+      SessionStorage.set("course", course);
       _this.$router.push("/business/chapter");
     }
   }
