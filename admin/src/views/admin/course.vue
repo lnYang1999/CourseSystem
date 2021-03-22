@@ -60,51 +60,6 @@
       </div>
     </div>
 
-    <!--    <table id="simple-table" class="table  table-bordered table-hover">-->
-    <!--      <thead>-->
-    <!--      <tr>-->
-    <!--        <th>id</th>-->
-    <!--        <th>名称</th>-->
-    <!--        <th>概述</th>-->
-    <!--        <th>时长</th>-->
-    <!--        <th>价格（元）</th>-->
-    <!--        <th>封面</th>-->
-    <!--        <th>级别</th>-->
-    <!--        <th>收费</th>-->
-    <!--        <th>状态</th>-->
-    <!--        <th>报名数</th>-->
-    <!--        <th>顺序</th>-->
-    <!--        <th>操作</th>-->
-    <!--      </tr>-->
-    <!--      </thead>-->
-
-    <!--      <tbody>-->
-    <!--      <tr v-for="course in courses">-->
-    <!--        <td>{{course.id}}</td>-->
-    <!--        <td>{{course.name}}</td>-->
-    <!--        <td>{{course.summary}}</td>-->
-    <!--        <td>{{course.time}}</td>-->
-    <!--        <td>{{course.price}}</td>-->
-    <!--        <td>{{course.image}}</td>-->
-    <!--        <td>{{COURSE_LEVEL | optionKV(course.level)}}</td>-->
-    <!--        <td>{{COURSE_CHARGE | optionKV(course.charge)}}</td>-->
-    <!--        <td>{{COURSE_STATUS | optionKV(course.status)}}</td>-->
-    <!--        <td>{{course.enroll}}</td>-->
-    <!--        <td>{{course.sort}}</td>-->
-    <!--      <td>-->
-    <!--        <div class="hidden-sm hidden-xs btn-group">-->
-    <!--          <button v-on:click="edit(course)" class="btn btn-xs btn-info">-->
-    <!--            <i class="ace-icon fa fa-pencil bigger-120"></i>-->
-    <!--          </button>-->
-    <!--          <button v-on:click="del(course.id)" class="btn btn-xs btn-danger">-->
-    <!--            <i class="ace-icon fa fa-trash-o bigger-120"></i>-->
-    <!--          </button>-->
-    <!--        </div>-->
-    <!--      </td>-->
-    <!--      </tr>-->
-    <!--      </tbody>-->
-    <!--    </table>-->
-
     <div id="form-modal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -114,6 +69,14 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">
+                  分类
+                </label>
+                <div class="col-sm-10">
+                  <ul id="tree" class="ztree"></ul>
+                </div>
+              </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
@@ -193,126 +156,158 @@
 </template>
 
 <script>
-import Pagination from "../../components/pagination";
-export default {
-  components: {Pagination},
-  name: "business-course",
-  data: function() {
-    return {
-      course: {},
-      courses: [],
-      COURSE_LEVEL: COURSE_LEVEL,
-      COURSE_CHARGE: COURSE_CHARGE,
-      COURSE_STATUS: COURSE_STATUS,
-    }
-  },
-  mounted: function() {
-    let _this = this;
-    _this.$refs.pagination.size = 5;
-    _this.list(1);
-    // sidebar激活样式方法一
-    // this.$parent.activeSidebar("business-course-sidebar");
-
-  },
-  methods: {
-    /**
-     * 点击【新增】
-     */
-    add() {
-      let _this = this;
-      _this.course = {};
-      $("#form-modal").modal("show");
+  import Pagination from "../../components/pagination";
+  export default {
+    components: {Pagination},
+    name: "business-course",
+    data: function() {
+      return {
+        course: {},
+        courses: [],
+        COURSE_LEVEL: COURSE_LEVEL,
+        COURSE_CHARGE: COURSE_CHARGE,
+        COURSE_STATUS: COURSE_STATUS,
+      }
     },
-
-    /**
-     * 点击【编辑】
-     */
-    edit(course) {
+    mounted: function() {
       let _this = this;
-      _this.course = $.extend({}, course);
-      $("#form-modal").modal("show");
+      _this.$refs.pagination.size = 5;
+      _this.initTree();
+      _this.list(1);
+      // sidebar激活样式方法一
+      // this.$parent.activeSidebar("business-course-sidebar");
+
     },
+    methods: {
+      /**
+       * 点击【新增】
+       */
+      add() {
+        let _this = this;
+        _this.course = {};
+        $("#form-modal").modal("show");
+      },
 
-    /**
-     * 列表查询
-     */
-    list(page) {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list', {
-        page: page,
-        size: _this.$refs.pagination.size,
-      }).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        _this.courses = resp.content.list;
-        _this.$refs.pagination.render(page, resp.content.total);
+      /**
+       * 点击【编辑】
+       */
+      edit(course) {
+        let _this = this;
+        _this.course = $.extend({}, course);
+        $("#form-modal").modal("show");
+      },
 
-      })
-    },
+      /**
+       * 列表查询
+       */
+      list(page) {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list', {
+          page: page,
+          size: _this.$refs.pagination.size,
+        }).then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.courses = resp.content.list;
+          _this.$refs.pagination.render(page, resp.content.total);
 
-    /**
-     * 点击【保存】
-     */
-    save(page) {
-      let _this = this;
+        })
+      },
 
-      // 保存校验
-      if (1 != 1
+      /**
+       * 点击【保存】
+       */
+      save(page) {
+        let _this = this;
+
+        // 保存校验
+        if (1 != 1
           || !Validator.require(_this.course.name, "名称")
           || !Validator.length(_this.course.name, "名称", 1, 50)
           || !Validator.length(_this.course.summary, "概述", 1, 2000)
           || !Validator.length(_this.course.image, "封面", 1, 100)
-      ) {
-        return;
-      }
-
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        if (resp.success) {
-          $("#form-modal").modal("hide");
-          _this.list(1);
-          Toast.success("保存成功！");
-        } else {
-          Toast.warning(resp.message)
+        ) {
+          return;
         }
-      })
-    },
 
-    /**
-     * 点击【删除】
-     */
-    del(id) {
-      let _this = this;
-      Confirm.show("删除课程后不可恢复，确认删除？", function () {
         Loading.show();
-        _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/course/delete/' + id).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
+            $("#form-modal").modal("hide");
             _this.list(1);
-            Toast.success("删除成功！");
+            Toast.success("保存成功！");
+          } else {
+            Toast.warning(resp.message)
           }
         })
-      });
-    },
+      },
 
-    /**
-     * 点击【大章】
-     */
-    toChapter(course) {
-      let _this = this;
-      SessionStorage.set("course", course);
-      _this.$router.push("/business/chapter");
+      /**
+       * 点击【删除】
+       */
+      del(id) {
+        let _this = this;
+        Confirm.show("删除课程后不可恢复，确认删除？", function () {
+          Loading.show();
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/course/delete/' + id).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Toast.success("删除成功！");
+            }
+          })
+        });
+      },
+
+      /**
+       * 点击【大章】
+       */
+      toChapter(course) {
+        let _this = this;
+        SessionStorage.set("course", course);
+        _this.$router.push("/business/chapter");
+      },
+
+      initTree() {
+        let setting = {
+          check: {
+            enable: true
+          },
+          data: {
+            simpleData: {
+              enable: true
+            }
+          }
+        };
+
+        let zNodes =[
+          { id:1, pId:0, name:"随意勾选 1", open:true},
+          { id:11, pId:1, name:"随意勾选 1-1", open:true},
+          { id:111, pId:11, name:"随意勾选 1-1-1"},
+          { id:112, pId:11, name:"随意勾选 1-1-2"},
+          { id:12, pId:1, name:"随意勾选 1-2", open:true},
+          { id:121, pId:12, name:"随意勾选 1-2-1"},
+          { id:122, pId:12, name:"随意勾选 1-2-2"},
+          { id:2, pId:0, name:"随意勾选 2", checked:true, open:true},
+          { id:21, pId:2, name:"随意勾选 2-1"},
+          { id:22, pId:2, name:"随意勾选 2-2", open:true},
+          { id:221, pId:22, name:"随意勾选 2-2-1", checked:true},
+          { id:222, pId:22, name:"随意勾选 2-2-2"},
+          { id:23, pId:2, name:"随意勾选 2-3"}
+        ];
+
+        $.fn.zTree.init($("#tree"), setting, zNodes);
+      }
     }
   }
-}
 </script>
 
 <style scoped>
-.caption h3 {
-  font-size: 20px;
-}
+  .caption h3 {
+    font-size: 20px;
+  }
 </style>
