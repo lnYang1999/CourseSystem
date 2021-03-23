@@ -87,7 +87,7 @@
                     <i class="ace-icon fa fa-upload"></i>
                     上传头像
                   </button>
-                  <input class="hidden" type="file" v-on:change="uploadImage()" id="file-upload-input">
+                  <input class="hidden" type="file" ref="file" v-on:change="uploadImage()" id="file-upload-input">
                   <div v-show="teacher.image" class="row">
                     <div class="col-md-4">
                       <img v-bind:src="teacher.image" class="img-responsive">
@@ -126,69 +126,69 @@
 </template>
 
 <script>
-  import Pagination from "../../components/pagination";
-  export default {
-    components: {Pagination},
-    name: "business-teacher",
-    data: function() {
-      return {
-        teacher: {},
-        teachers: [],
-      }
-    },
-    mounted: function() {
+import Pagination from "../../components/pagination";
+export default {
+  components: {Pagination},
+  name: "business-teacher",
+  data: function() {
+    return {
+      teacher: {},
+      teachers: [],
+    }
+  },
+  mounted: function() {
+    let _this = this;
+    _this.$refs.pagination.size = 5;
+    _this.list(1);
+    // sidebar激活样式方法一
+    // this.$parent.activeSidebar("business-teacher-sidebar");
+
+  },
+  methods: {
+    /**
+     * 点击【新增】
+     */
+    add() {
       let _this = this;
-      _this.$refs.pagination.size = 5;
-      _this.list(1);
-      // sidebar激活样式方法一
-      // this.$parent.activeSidebar("business-teacher-sidebar");
-
+      _this.teacher = {};
+      $("#form-modal").modal("show");
     },
-    methods: {
-      /**
-       * 点击【新增】
-       */
-      add() {
-        let _this = this;
-        _this.teacher = {};
-        $("#form-modal").modal("show");
-      },
 
-      /**
-       * 点击【编辑】
-       */
-      edit(teacher) {
-        let _this = this;
-        _this.teacher = $.extend({}, teacher);
-        $("#form-modal").modal("show");
-      },
+    /**
+     * 点击【编辑】
+     */
+    edit(teacher) {
+      let _this = this;
+      _this.teacher = $.extend({}, teacher);
+      $("#form-modal").modal("show");
+    },
 
-      /**
-       * 列表查询
-       */
-      list(page) {
-        let _this = this;
-        Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/list', {
-          page: page,
-          size: _this.$refs.pagination.size,
-        }).then((response)=>{
-          Loading.hide();
-          let resp = response.data;
-          _this.teachers = resp.content.list;
-          _this.$refs.pagination.render(page, resp.content.total);
+    /**
+     * 列表查询
+     */
+    list(page) {
+      let _this = this;
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/list', {
+        page: page,
+        size: _this.$refs.pagination.size,
+      }).then((response)=>{
+        Loading.hide();
+        let resp = response.data;
+        _this.teachers = resp.content.list;
+        _this.$refs.pagination.render(page, resp.content.total);
 
-        })
-      },
+      })
+    },
 
-      /**
-       * 点击【保存】
-       */
-      save() {
-        let _this = this;
+    /**
+     * 点击【保存】
+     */
+    save() {
+      let _this = this;
 
-        // 保存校验
-        if (1 != 1
+      // 保存校验
+      if (1 != 1
           || !Validator.require(_this.teacher.name, "姓名")
           || !Validator.length(_this.teacher.name, "姓名", 1, 50)
           || !Validator.length(_this.teacher.nickname, "昵称", 1, 50)
@@ -196,60 +196,78 @@
           || !Validator.length(_this.teacher.position, "职位", 1, 50)
           || !Validator.length(_this.teacher.motto, "座右铭", 1, 50)
           || !Validator.length(_this.teacher.intro, "简介", 1, 500)
-        ) {
-          return;
-        }
+      ) {
+        return;
+      }
 
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', _this.teacher).then((response)=>{
+        Loading.hide();
+        let resp = response.data;
+        if (resp.success) {
+          $("#form-modal").modal("hide");
+          _this.list(1);
+          Toast.success("保存成功！");
+        } else {
+          Toast.warning(resp.message)
+        }
+      })
+    },
+
+    /**
+     * 点击【删除】
+     */
+    del(id) {
+      let _this = this;
+      Confirm.show("删除讲师后不可恢复，确认删除？", function () {
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', _this.teacher).then((response)=>{
+        _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/teacher/delete/' + id).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
-            $("#form-modal").modal("hide");
             _this.list(1);
-            Toast.success("保存成功！");
-          } else {
-            Toast.warning(resp.message)
+            Toast.success("删除成功！");
           }
         })
-      },
+      });
+    },
 
-      /**
-       * 点击【删除】
-       */
-      del(id) {
-        let _this = this;
-        Confirm.show("删除讲师后不可恢复，确认删除？", function () {
-          Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/teacher/delete/' + id).then((response)=>{
-            Loading.hide();
-            let resp = response.data;
-            if (resp.success) {
-              _this.list(1);
-              Toast.success("删除成功！");
-            }
-          })
-        });
-      },
+    uploadImage () {
+      let _this = this;
+      let formData = new window.FormData();
+      let file = _this.$refs.file.files[0];
 
-      uploadImage () {
-        let _this = this;
-        let formData = new window.FormData();
-        // key："file"必须和后端controller参数名一致
-        formData.append('file', document.querySelector('#file-upload-input').files[0]);
-        Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response)=>{
-          Loading.hide();
-          let resp = response.data;
-          let image = resp.content;
-          console.log("头像地址：", image);
-          _this.teacher.image = image;
-        });
-      },
-
-      selectImage () {
-        $("#file-upload-input").trigger("click");
+      // 判断文件格式
+      let suffixs = ["jpg", "jpeg", "png"];
+      let fileName = file.name;
+      let suffix = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
+      let validateSuffix = false;
+      for (let i = 0; i < suffixs.length; i++) {
+        if (suffixs[i].toLowerCase() === suffix) {
+          validateSuffix = true;
+          break;
+        }
       }
+      if (!validateSuffix) {
+        Toast.warning("文件格式不正确！只支持上传：" + suffixs.join(","));
+        return;
+      }
+
+      // key："file"必须和后端controller参数名一致
+      formData.append('file', file);
+      Loading.show();
+      _this.$ajax.post(process.env.VUE_APP_SERVER + '/file/admin/upload', formData).then((response)=>{
+        Loading.hide();
+        let resp = response.data;
+        let image = resp.content;
+        console.log("头像地址：", image);
+        _this.teacher.image = image;
+      });
+    },
+
+    selectImage () {
+      $("#file-upload-input").trigger("click");
     }
   }
+}
 </script>
