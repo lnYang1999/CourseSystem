@@ -42,16 +42,16 @@
         <td>{{section.time | formatSecond}}</td>
         <td>{{SECTION_CHARGE | optionKV(section.charge)}}</td>
         <td>{{section.sort}}</td>
-        <td>
-          <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="edit(section)" class="btn btn-xs btn-info">
-              <i class="ace-icon fa fa-pencil bigger-120"></i>
-            </button>
-            <button v-on:click="del(section.id)" class="btn btn-xs btn-danger">
-              <i class="ace-icon fa fa-trash-o bigger-120"></i>
-            </button>
-          </div>
-        </td>
+      <td>
+        <div class="hidden-sm hidden-xs btn-group">
+          <button v-on:click="edit(section)" class="btn btn-xs btn-info">
+            <i class="ace-icon fa fa-pencil bigger-120"></i>
+          </button>
+          <button v-on:click="del(section.id)" class="btn btn-xs btn-danger">
+            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+          </button>
+        </div>
+      </td>
       </tr>
       </tbody>
     </table>
@@ -86,11 +86,11 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">视频</label>
                 <div class="col-sm-10">
-                  <file v-bind:input-id="'video-upload'"
-                        v-bind:text="'上传视频'"
+                  <big-file v-bind:input-id="'video-upload'"
+                        v-bind:text="'上传大视频'"
                         v-bind:suffixs="['mp4']"
                         v-bind:use="FILE_USE.COURSE.key"
-                        v-bind:after-upload="afterUpload"></file>
+                        v-bind:after-upload="afterUpload"></big-file>
                   <div v-show="section.video" class="row">
                     <div class="col-md-9">
                       <video v-bind:src="section.video" id="video" controls="controls"></video>
@@ -131,147 +131,147 @@
 </template>
 
 <script>
-import Pagination from "../../components/pagination";
-import File from "../../components/file";
-export default {
-  components: {Pagination, File},
-  name: "business-section",
-  data: function() {
-    return {
-      section: {},
-      sections: [],
-      SECTION_CHARGE: SECTION_CHARGE,
-      FILE_USE: FILE_USE,
-      course: {},
-      chapter: {},
-    }
-  },
-  mounted: function() {
-    let _this = this;
-    _this.$refs.pagination.size = 5;
-    let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
-    let chapter = SessionStorage.get(SESSION_KEY_CHAPTER) || {};
-    if (Tool.isEmpty(course) || Tool.isEmpty(chapter)) {
-      _this.$router.push("/welcome");
-    }
-    _this.course = course;
-    _this.chapter = chapter;
-    _this.list(1);
-    // sidebar激活样式方法一
-    this.$parent.activeSidebar("business-course-sidebar");
-
-  },
-  methods: {
-    /**
-     * 点击【新增】
-     */
-    add() {
-      let _this = this;
-      _this.section = {};
-      $("#form-modal").modal("show");
+  import Pagination from "../../components/pagination";
+  import BigFile from "../../components/big-file";
+  export default {
+    components: {Pagination, BigFile},
+    name: "business-section",
+    data: function() {
+      return {
+        section: {},
+        sections: [],
+        SECTION_CHARGE: SECTION_CHARGE,
+        FILE_USE: FILE_USE,
+        course: {},
+        chapter: {},
+      }
     },
-
-    /**
-     * 点击【编辑】
-     */
-    edit(section) {
+    mounted: function() {
       let _this = this;
-      _this.section = $.extend({}, section);
-      $("#form-modal").modal("show");
+      _this.$refs.pagination.size = 5;
+      let course = SessionStorage.get(SESSION_KEY_COURSE) || {};
+      let chapter = SessionStorage.get(SESSION_KEY_CHAPTER) || {};
+      if (Tool.isEmpty(course) || Tool.isEmpty(chapter)) {
+        _this.$router.push("/welcome");
+      }
+      _this.course = course;
+      _this.chapter = chapter;
+      _this.list(1);
+      // sidebar激活样式方法一
+      this.$parent.activeSidebar("business-course-sidebar");
+
     },
+    methods: {
+      /**
+       * 点击【新增】
+       */
+      add() {
+        let _this = this;
+        _this.section = {};
+        $("#form-modal").modal("show");
+      },
 
-    /**
-     * 列表查询
-     */
-    list(page) {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/list', {
-        page: page,
-        size: _this.$refs.pagination.size,
-        courseId: _this.course.id,
-        chapterId: _this.chapter.id
-      }).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        _this.sections = resp.content.list;
-        _this.$refs.pagination.render(page, resp.content.total);
+      /**
+       * 点击【编辑】
+       */
+      edit(section) {
+        let _this = this;
+        _this.section = $.extend({}, section);
+        $("#form-modal").modal("show");
+      },
 
-      })
-    },
+      /**
+       * 列表查询
+       */
+      list(page) {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/list', {
+          page: page,
+          size: _this.$refs.pagination.size,
+          courseId: _this.course.id,
+          chapterId: _this.chapter.id
+        }).then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.sections = resp.content.list;
+          _this.$refs.pagination.render(page, resp.content.total);
 
-    /**
-     * 点击【保存】
-     */
-    save(page) {
-      let _this = this;
+        })
+      },
 
-      // 保存校验
-      if (1 != 1
+      /**
+       * 点击【保存】
+       */
+      save(page) {
+        let _this = this;
+
+        // 保存校验
+        if (1 != 1
           || !Validator.require(_this.section.title, "标题")
           || !Validator.length(_this.section.title, "标题", 1, 50)
           || !Validator.length(_this.section.video, "视频", 1, 200)
-      ) {
-        return;
-      }
-      _this.section.courseId = _this.course.id;
-      _this.section.chapterId = _this.chapter.id;
-
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        if (resp.success) {
-          $("#form-modal").modal("hide");
-          _this.list(1);
-          Toast.success("保存成功！");
-        } else {
-          Toast.warning(resp.message)
+        ) {
+          return;
         }
-      })
-    },
+        _this.section.courseId = _this.course.id;
+        _this.section.chapterId = _this.chapter.id;
 
-    /**
-     * 点击【删除】
-     */
-    del(id) {
-      let _this = this;
-      Confirm.show("删除小节后不可恢复，确认删除？", function () {
         Loading.show();
-        _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/section/delete/' + id).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/section/save', _this.section).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
+            $("#form-modal").modal("hide");
             _this.list(1);
-            Toast.success("删除成功！");
+            Toast.success("保存成功！");
+          } else {
+            Toast.warning(resp.message)
           }
         })
-      });
-    },
+      },
 
-    afterUpload(resp) {
-      let _this = this;
-      let video = resp.content.path;
-      _this.section.video = video;
-      _this.getTime();
-    },
+      /**
+       * 点击【删除】
+       */
+      del(id) {
+        let _this = this;
+        Confirm.show("删除小节后不可恢复，确认删除？", function () {
+          Loading.show();
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/section/delete/' + id).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Toast.success("删除成功！");
+            }
+          })
+        });
+      },
 
-    /**
-     * 获取时长
-     */
-    getTime() {
-      let _this = this;
-      let ele = document.getElementById("video");
-      _this.section.time = parseInt(ele.duration, 10);
-    },
+      afterUpload(resp) {
+        let _this = this;
+        let video = resp.content.path;
+        _this.section.video = video;
+        _this.getTime();
+      },
+
+      /**
+       * 获取时长
+       */
+      getTime() {
+        let _this = this;
+        let ele = document.getElementById("video");
+        _this.section.time = parseInt(ele.duration, 10);
+      },
+    }
   }
-}
 </script>
 
 <style scoped>
-video {
-  width: 100%;
-  height: auto;
-  margin-top: 10px;
-}
+  video {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
 </style>
