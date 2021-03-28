@@ -97,11 +97,11 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">封面</label>
                 <div class="col-sm-10">
-                  <file v-bind:input-id="'image-upload'"
+                  <big-file v-bind:input-id="'image-upload'"
                         v-bind:text="'上传封面'"
                         v-bind:suffixs="['jpg', 'jpeg', 'png']"
                         v-bind:use="FILE_USE.COURSE.key"
-                        v-bind:after-upload="afterUpload"></file>
+                        v-bind:after-upload="afterUpload"></big-file>
                   <div v-show="course.image" class="row">
                     <div class="col-md-6">
                       <img v-bind:src="course.image" class="img-responsive">
@@ -231,273 +231,273 @@
 </template>
 
 <script>
-import Pagination from "../../components/pagination";
-import File from "../../components/file";
-export default {
-  components: {Pagination, File},
-  name: "business-course",
-  data: function() {
-    return {
-      course: {},
-      courses: [],
-      COURSE_LEVEL: COURSE_LEVEL,
-      COURSE_CHARGE: COURSE_CHARGE,
-      COURSE_STATUS: COURSE_STATUS,
-      FILE_USE: FILE_USE,
-      categorys: [],
-      tree: {},
-      saveContentLabel: "",
-      sort: {
-        id: "",
-        oldSort: 0,
-        newSort: 0
+  import Pagination from "../../components/pagination";
+  import BigFile from "../../components/big-file";
+  export default {
+    components: {Pagination, BigFile},
+    name: "business-course",
+    data: function() {
+      return {
+        course: {},
+        courses: [],
+        COURSE_LEVEL: COURSE_LEVEL,
+        COURSE_CHARGE: COURSE_CHARGE,
+        COURSE_STATUS: COURSE_STATUS,
+        FILE_USE: FILE_USE,
+        categorys: [],
+        tree: {},
+        saveContentLabel: "",
+        sort: {
+          id: "",
+          oldSort: 0,
+          newSort: 0
+        },
+        teachers: [],
+      }
+    },
+    mounted: function() {
+      let _this = this;
+      _this.$refs.pagination.size = 5;
+      _this.allCategory();
+      _this.allTeacher();
+      _this.list(1);
+      // sidebar激活样式方法一
+      // this.$parent.activeSidebar("business-course-sidebar");
+
+    },
+    methods: {
+      /**
+       * 点击【新增】
+       */
+      add() {
+        let _this = this;
+        _this.course = {
+          sort: _this.$refs.pagination.total + 1
+        };
+        _this.tree.checkAllNodes(false);
+        $("#form-modal").modal("show");
       },
-      teachers: [],
-    }
-  },
-  mounted: function() {
-    let _this = this;
-    _this.$refs.pagination.size = 5;
-    _this.allCategory();
-    _this.allTeacher();
-    _this.list(1);
-    // sidebar激活样式方法一
-    // this.$parent.activeSidebar("business-course-sidebar");
 
-  },
-  methods: {
-    /**
-     * 点击【新增】
-     */
-    add() {
-      let _this = this;
-      _this.course = {
-        sort: _this.$refs.pagination.total + 1
-      };
-      _this.tree.checkAllNodes(false);
-      $("#form-modal").modal("show");
-    },
+      /**
+       * 点击【编辑】
+       */
+      edit(course) {
+        let _this = this;
+        _this.course = $.extend({}, course);
+        _this.listCategory(course.id);
+        $("#form-modal").modal("show");
+      },
 
-    /**
-     * 点击【编辑】
-     */
-    edit(course) {
-      let _this = this;
-      _this.course = $.extend({}, course);
-      _this.listCategory(course.id);
-      $("#form-modal").modal("show");
-    },
+      /**
+       * 列表查询
+       */
+      list(page) {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list', {
+          page: page,
+          size: _this.$refs.pagination.size,
+        }).then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.courses = resp.content.list;
+          _this.$refs.pagination.render(page, resp.content.total);
 
-    /**
-     * 列表查询
-     */
-    list(page) {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list', {
-        page: page,
-        size: _this.$refs.pagination.size,
-      }).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        _this.courses = resp.content.list;
-        _this.$refs.pagination.render(page, resp.content.total);
+        })
+      },
 
-      })
-    },
+      /**
+       * 点击【保存】
+       */
+      save(page) {
+        let _this = this;
 
-    /**
-     * 点击【保存】
-     */
-    save(page) {
-      let _this = this;
-
-      // 保存校验
-      if (1 != 1
+        // 保存校验
+        if (1 != 1
           || !Validator.require(_this.course.name, "名称")
           || !Validator.length(_this.course.name, "名称", 1, 50)
           || !Validator.length(_this.course.summary, "概述", 1, 2000)
           || !Validator.length(_this.course.image, "封面", 1, 100)
-      ) {
-        return;
-      }
-
-      let categorys = _this.tree.getCheckedNodes();
-      if (Tool.isEmpty(categorys)) {
-        Toast.warning("请选择分类！");
-        return;
-      }
-      _this.course.categorys = categorys;
-
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        if (resp.success) {
-          $("#form-modal").modal("hide");
-          _this.list(1);
-          Toast.success("保存成功！");
-        } else {
-          Toast.warning(resp.message)
+        ) {
+          return;
         }
-      })
-    },
 
-    /**
-     * 点击【删除】
-     */
-    del(id) {
-      let _this = this;
-      Confirm.show("删除课程后不可恢复，确认删除？", function () {
+        let categorys = _this.tree.getCheckedNodes();
+        if (Tool.isEmpty(categorys)) {
+          Toast.warning("请选择分类！");
+          return;
+        }
+        _this.course.categorys = categorys;
+
         Loading.show();
-        _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/course/delete/' + id).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/save', _this.course).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
+            $("#form-modal").modal("hide");
             _this.list(1);
-            Toast.success("删除成功！");
+            Toast.success("保存成功！");
+          } else {
+            Toast.warning(resp.message)
           }
         })
-      });
-    },
+      },
 
-    /**
-     * 点击【大章】
-     */
-    toChapter(course) {
-      let _this = this;
-      SessionStorage.set(SESSION_KEY_COURSE, course);
-      _this.$router.push("/business/chapter");
-    },
+      /**
+       * 点击【删除】
+       */
+      del(id) {
+        let _this = this;
+        Confirm.show("删除课程后不可恢复，确认删除？", function () {
+          Loading.show();
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/course/delete/' + id).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Toast.success("删除成功！");
+            }
+          })
+        });
+      },
 
-    /**
-     * 点击【内容】
-     */
-    toContent(course) {
-      let _this = this;
-      SessionStorage.set(SESSION_KEY_COURSE, course);
-      _this.$router.push("/business/content");
-    },
+      /**
+       * 点击【大章】
+       */
+      toChapter(course) {
+        let _this = this;
+        SessionStorage.set(SESSION_KEY_COURSE, course);
+        _this.$router.push("/business/chapter");
+      },
 
-    allCategory() {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        _this.categorys = resp.content;
+      /**
+       * 点击【内容】
+       */
+      toContent(course) {
+        let _this = this;
+        SessionStorage.set(SESSION_KEY_COURSE, course);
+        _this.$router.push("/business/content");
+      },
 
-        _this.initTree();
-      })
-    },
+      allCategory() {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/category/all').then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.categorys = resp.content;
 
-    initTree() {
-      let _this = this;
-      let setting = {
-        check: {
-          enable: true
-        },
-        data: {
-          simpleData: {
-            idKey: "id",
-            pIdKey: "parent",
-            rootPId: "00000000",
+          _this.initTree();
+        })
+      },
+
+      initTree() {
+        let _this = this;
+        let setting = {
+          check: {
             enable: true
+          },
+          data: {
+            simpleData: {
+              idKey: "id",
+              pIdKey: "parent",
+              rootPId: "00000000",
+              enable: true
+            }
           }
+        };
+
+        let zNodes = _this.categorys;
+
+        _this.tree = $.fn.zTree.init($("#tree"), setting, zNodes);
+
+        // 展开所有的节点
+        // _this.tree.expandAll(true);
+      },
+
+      /**
+       * 查找课程下所有分类
+       * @param courseId
+       */
+      listCategory(courseId) {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res)=>{
+          Loading.hide();
+          console.log("查找课程下所有分类结果：", res);
+          let response = res.data;
+          let categorys = response.content;
+
+          // 勾选查询到的分类
+          _this.tree.checkAllNodes(false);
+          for (let i = 0; i < categorys.length; i++) {
+            let node = _this.tree.getNodeByParam("id", categorys[i].categoryId);
+            _this.tree.checkNode(node, true);
+          }
+        })
+      },
+
+      openSortModal(course) {
+        let _this = this;
+        _this.sort = {
+          id: course.id,
+          oldSort: course.sort,
+          newSort: course.sort
+        };
+        $("#course-sort-modal").modal("show");
+      },
+
+      /**
+       * 排序
+       */
+      updateSort() {
+        let _this = this;
+        if (_this.sort.newSort === _this.sort.oldSort) {
+          Toast.warning("排序没有变化");
+          return;
         }
-      };
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/course/sort", _this.sort).then((res) => {
+          let response = res.data;
 
-      let zNodes = _this.categorys;
+          if (response.success) {
+            Toast.success("更新排序成功");
+            $("#course-sort-modal").modal("hide");
+            _this.list(1);
+          } else {
+            Toast.error("更新排序失败");
+          }
+        });
+      },
 
-      _this.tree = $.fn.zTree.init($("#tree"), setting, zNodes);
+      allTeacher() {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all').then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.teachers = resp.content;
+        })
+      },
 
-      // 展开所有的节点
-      // _this.tree.expandAll(true);
-    },
+      afterUpload(resp) {
+        let _this = this;
+        let image = resp.content.path;
+        _this.course.image = image;
+      },
 
-    /**
-     * 查找课程下所有分类
-     * @param courseId
-     */
-    listCategory(courseId) {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/list-category/' + courseId).then((res)=>{
-        Loading.hide();
-        console.log("查找课程下所有分类结果：", res);
-        let response = res.data;
-        let categorys = response.content;
-
-        // 勾选查询到的分类
-        _this.tree.checkAllNodes(false);
-        for (let i = 0; i < categorys.length; i++) {
-          let node = _this.tree.getNodeByParam("id", categorys[i].categoryId);
-          _this.tree.checkNode(node, true);
-        }
-      })
-    },
-
-    openSortModal(course) {
-      let _this = this;
-      _this.sort = {
-        id: course.id,
-        oldSort: course.sort,
-        newSort: course.sort
-      };
-      $("#course-sort-modal").modal("show");
-    },
-
-    /**
-     * 排序
-     */
-    updateSort() {
-      let _this = this;
-      if (_this.sort.newSort === _this.sort.oldSort) {
-        Toast.warning("排序没有变化");
-        return;
-      }
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + "/business/admin/course/sort", _this.sort).then((res) => {
-        let response = res.data;
-
-        if (response.success) {
-          Toast.success("更新排序成功");
-          $("#course-sort-modal").modal("hide");
-          _this.list(1);
-        } else {
-          Toast.error("更新排序失败");
-        }
-      });
-    },
-
-    allTeacher() {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/all').then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        _this.teachers = resp.content;
-      })
-    },
-
-    afterUpload(resp) {
-      let _this = this;
-      let image = resp.content.path;
-      _this.course.image = image;
-    },
-
+    }
   }
-}
 </script>
 
 <style scoped>
-.caption h3 {
-  font-size: 20px;
-}
-
-@media (max-width: 1199px) {
   .caption h3 {
-    font-size: 16px;
+    font-size: 20px;
   }
-}
+
+  @media (max-width: 1199px) {
+    .caption h3 {
+      font-size: 16px;
+    }
+  }
 </style>

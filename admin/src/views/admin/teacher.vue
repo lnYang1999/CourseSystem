@@ -83,11 +83,11 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label">头像</label>
                 <div class="col-sm-10">
-                  <file v-bind:input-id="'image-upload'"
+                  <big-file v-bind:input-id="'image-upload'"
                         v-bind:text="'上传头像'"
                         v-bind:suffixs="['jpg', 'jpeg', 'png']"
                         v-bind:use="FILE_USE.TEACHER.key"
-                        v-bind:after-upload="afterUpload"></file>
+                        v-bind:after-upload="afterUpload"></big-file>
                   <div v-show="teacher.image" class="row">
                     <div class="col-md-4">
                       <img v-bind:src="teacher.image" class="img-responsive">
@@ -126,71 +126,71 @@
 </template>
 
 <script>
-import Pagination from "../../components/pagination";
-import File from "../../components/file";
-export default {
-  components: {Pagination, File},
-  name: "business-teacher",
-  data: function() {
-    return {
-      teacher: {},
-      teachers: [],
-      FILE_USE: FILE_USE
-    }
-  },
-  mounted: function() {
-    let _this = this;
-    _this.$refs.pagination.size = 5;
-    _this.list(1);
-    // sidebar激活样式方法一
-    // this.$parent.activeSidebar("business-teacher-sidebar");
-
-  },
-  methods: {
-    /**
-     * 点击【新增】
-     */
-    add() {
-      let _this = this;
-      _this.teacher = {};
-      $("#form-modal").modal("show");
+  import Pagination from "../../components/pagination";
+  import BigFile from "../../components/big-file";
+  export default {
+    components: {Pagination, BigFile},
+    name: "business-teacher",
+    data: function() {
+      return {
+        teacher: {},
+        teachers: [],
+        FILE_USE: FILE_USE
+      }
     },
-
-    /**
-     * 点击【编辑】
-     */
-    edit(teacher) {
+    mounted: function() {
       let _this = this;
-      _this.teacher = $.extend({}, teacher);
-      $("#form-modal").modal("show");
+      _this.$refs.pagination.size = 5;
+      _this.list(1);
+      // sidebar激活样式方法一
+      // this.$parent.activeSidebar("business-teacher-sidebar");
+
     },
+    methods: {
+      /**
+       * 点击【新增】
+       */
+      add() {
+        let _this = this;
+        _this.teacher = {};
+        $("#form-modal").modal("show");
+      },
 
-    /**
-     * 列表查询
-     */
-    list(page) {
-      let _this = this;
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/list', {
-        page: page,
-        size: _this.$refs.pagination.size,
-      }).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        _this.teachers = resp.content.list;
-        _this.$refs.pagination.render(page, resp.content.total);
+      /**
+       * 点击【编辑】
+       */
+      edit(teacher) {
+        let _this = this;
+        _this.teacher = $.extend({}, teacher);
+        $("#form-modal").modal("show");
+      },
 
-      })
-    },
+      /**
+       * 列表查询
+       */
+      list(page) {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/list', {
+          page: page,
+          size: _this.$refs.pagination.size,
+        }).then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.teachers = resp.content.list;
+          _this.$refs.pagination.render(page, resp.content.total);
 
-    /**
-     * 点击【保存】
-     */
-    save() {
-      let _this = this;
+        })
+      },
 
-      // 保存校验
-      if (1 != 1
+      /**
+       * 点击【保存】
+       */
+      save() {
+        let _this = this;
+
+        // 保存校验
+        if (1 != 1
           || !Validator.require(_this.teacher.name, "姓名")
           || !Validator.length(_this.teacher.name, "姓名", 1, 50)
           || !Validator.length(_this.teacher.nickname, "昵称", 1, 50)
@@ -198,47 +198,47 @@ export default {
           || !Validator.length(_this.teacher.position, "职位", 1, 50)
           || !Validator.length(_this.teacher.motto, "座右铭", 1, 50)
           || !Validator.length(_this.teacher.intro, "简介", 1, 500)
-      ) {
-        return;
-      }
-
-      Loading.show();
-      _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', _this.teacher).then((response)=>{
-        Loading.hide();
-        let resp = response.data;
-        if (resp.success) {
-          $("#form-modal").modal("hide");
-          _this.list(1);
-          Toast.success("保存成功！");
-        } else {
-          Toast.warning(resp.message)
+        ) {
+          return;
         }
-      })
-    },
 
-    /**
-     * 点击【删除】
-     */
-    del(id) {
-      let _this = this;
-      Confirm.show("删除讲师后不可恢复，确认删除？", function () {
         Loading.show();
-        _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/teacher/delete/' + id).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/teacher/save', _this.teacher).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
+            $("#form-modal").modal("hide");
             _this.list(1);
-            Toast.success("删除成功！");
+            Toast.success("保存成功！");
+          } else {
+            Toast.warning(resp.message)
           }
         })
-      });
-    },
+      },
 
-    afterUpload(resp) {
-      let _this = this;
-      let image = resp.content.path;
-      _this.teacher.image = image;
+      /**
+       * 点击【删除】
+       */
+      del(id) {
+        let _this = this;
+        Confirm.show("删除讲师后不可恢复，确认删除？", function () {
+          Loading.show();
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/teacher/delete/' + id).then((response)=>{
+            Loading.hide();
+            let resp = response.data;
+            if (resp.success) {
+              _this.list(1);
+              Toast.success("删除成功！");
+            }
+          })
+        });
+      },
+
+      afterUpload(resp) {
+        let _this = this;
+        let image = resp.content.path;
+        _this.teacher.image = image;
+      }
     }
   }
-}
 </script>
