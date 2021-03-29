@@ -44,8 +44,8 @@ public class VodUtil {
         //request.setDescription("this is desc");
         //request.setTags("tag1,tag2");
         request.setCoverURL("http://vod.aliyun.com/test_cover_url.jpg");
-        request.setCateId(1000285884L);
-        request.setTemplateGroupId("2c699e1960904115953dcb456127342a");
+        request.setCateId(1000115308L);
+        request.setTemplateGroupId("78fffb8c0c2426efd5baaaafed76fe36");
         //request.setWorkflowId("");
         //request.setStorageLocation("");
         //request.setAppId("app-1000000");
@@ -79,7 +79,16 @@ public class VodUtil {
         String bucketName = uploadAddress.getString("Bucket");
         String objectName = uploadAddress.getString("FileName");
         File file = new File(localFile);
+        // 单文件上传
         ossClient.putObject(bucketName, objectName, file);
+
+        /* 视频点播不支持追加上传
+        // 追加上传
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentType("text/plain");
+        AppendObjectRequest request = new AppendObjectRequest(bucketName, objectName, file, meta);
+        request.setPosition(0L);
+        ossClient.appendObject(request);*/
     }
 
     /**
@@ -100,11 +109,11 @@ public class VodUtil {
 
     public static void main(String[] argv) {
         //您的AccessKeyId
-        String accessKeyId = "LTAI5tNWd3dXJbZiWuFrdAyw";
+        String accessKeyId = "LTAI4FnmXZVs9Pufn8kt2whV";
         //您的AccessKeySecret
-        String accessKeySecret = "0pQT5J45G4tWs9N92k1UIZvSKIc20j";
+        String accessKeySecret = "yQqZJ0WGnyAxaT9Gy1mKIJXY68F6A6";
         //需要上传到VOD的本地视频文件的完整路径，需要包含文件扩展名
-        String localFile = "I:\\IDEA Project\\course\\admin\\public\\static\\image\\小节视频\\23.mp4";
+        String localFile = "D:\\imooc\\course\\workspace\\course\\admin\\public\\static\\image\\小节视频\\test.mp4";
         try {
             // 初始化VOD客户端并获取上传地址和凭证
             DefaultAcsClient vodClient = initVodClient(accessKeyId, accessKeySecret);
