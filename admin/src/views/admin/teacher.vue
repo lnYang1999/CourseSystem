@@ -127,9 +127,10 @@
 
 <script>
   import Pagination from "../../components/pagination";
+  import File from "../../components/file";
   import BigFile from "../../components/big-file";
   export default {
-    components: {Pagination, BigFile},
+    components: {Pagination, File, BigFile},
     name: "business-teacher",
     data: function() {
       return {
