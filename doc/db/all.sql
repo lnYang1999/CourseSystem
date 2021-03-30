@@ -62,10 +62,7 @@ create table `section` (
                            primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='小节';
 
-
-ALTER TABLE `section` ADD COLUMN (
-    `vod` CHAR(32) COMMENT 'VOD|阿里云VOD'
-    );
+alter table `section` add column (`vod` char(32) comment 'vod|阿里云vod');
 
 insert into `section` (id, title, course_id, chapter_id, video, time, charge, sort, created_at, updated_at)
 values ('00000001', '测试小节01', '00000001', '00000000', '', 500, 'f', 1, now(), now());
@@ -188,6 +185,7 @@ alter table `file` add column (`shard_size` int comment '分片大小|B');
 alter table `file` add column (`shard_total` int comment '分片总数');
 alter table `file` add column (`key` varchar(32) comment '文件标识');
 alter table `file` add unique key key_unique (`key`);
+alter table `file` add column (`vod` char(32) comment 'vod|阿里云vod');
 
 # ---------------------- 测试
 
