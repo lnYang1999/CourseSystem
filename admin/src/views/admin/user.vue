@@ -17,30 +17,30 @@
     <table id="simple-table" class="table  table-bordered table-hover">
       <thead>
       <tr>
-                    <th>id</th>
-            <th>登陆名</th>
-            <th>昵称</th>
-            <th>密码</th>
+        <th>id</th>
+        <th>登陆名</th>
+        <th>昵称</th>
+        <th>密码</th>
         <th>操作</th>
       </tr>
       </thead>
 
       <tbody>
       <tr v-for="user in users">
-              <td>{{user.id}}</td>
-              <td>{{user.loginName}}</td>
-              <td>{{user.name}}</td>
-              <td>{{user.password}}</td>
-        <td>
-          <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="edit(user)" class="btn btn-xs btn-info">
-              <i class="ace-icon fa fa-pencil bigger-120"></i>
-            </button>
-            <button v-on:click="del(user.id)" class="btn btn-xs btn-danger">
-              <i class="ace-icon fa fa-trash-o bigger-120"></i>
-            </button>
-          </div>
-        </td>
+        <td>{{user.id}}</td>
+        <td>{{user.loginName}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.password}}</td>
+      <td>
+        <div class="hidden-sm hidden-xs btn-group">
+          <button v-on:click="edit(user)" class="btn btn-xs btn-info">
+            <i class="ace-icon fa fa-pencil bigger-120"></i>
+          </button>
+          <button v-on:click="del(user.id)" class="btn btn-xs btn-danger">
+            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+          </button>
+        </div>
+      </td>
       </tr>
       </tbody>
     </table>
@@ -54,24 +54,24 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">登陆名</label>
-                      <div class="col-sm-10">
-                        <input v-model="user.loginName" class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">昵称</label>
-                      <div class="col-sm-10">
-                        <input v-model="user.name" class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">密码</label>
-                      <div class="col-sm-10">
-                        <input v-model="user.password" class="form-control">
-                      </div>
-                    </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">登陆名</label>
+                <div class="col-sm-10">
+                  <input v-model="user.loginName" v-bind:disabled="user.id" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">昵称</label>
+                <div class="col-sm-10">
+                  <input v-model="user.name" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-10">
+                  <input v-model="user.password" class="form-control">
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -148,10 +148,10 @@
 
         // 保存校验
         if (1 != 1
-                || !Validator.require(_this.user.loginName, "登陆名")
-                || !Validator.length(_this.user.loginName, "登陆名", 1, 50)
-                || !Validator.length(_this.user.name, "昵称", 1, 50)
-                || !Validator.require(_this.user.password, "密码")
+          || !Validator.require(_this.user.loginName, "登陆名")
+          || !Validator.length(_this.user.loginName, "登陆名", 1, 50)
+          || !Validator.length(_this.user.name, "昵称", 1, 50)
+          || !Validator.require(_this.user.password, "密码")
         ) {
           return;
         }
@@ -175,7 +175,7 @@
        */
       del(id) {
         let _this = this;
-        Confirm.show("删除用户后不可恢复，确认删除？", function () {
+        Confirm.show("删除用户表后不可恢复，确认删除？", function () {
           Loading.show();
           _this.$ajax.delete(process.env.VUE_APP_SERVER + '/system/admin/user/delete/' + id).then((response)=>{
             Loading.hide();
