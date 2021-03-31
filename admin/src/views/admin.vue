@@ -362,7 +362,7 @@
             <b class="arrow"></b>
           </li>
 
-          <li class="">
+          <li class="active open">
             <a href="#" class="dropdown-toggle">
               <i class="menu-icon fa fa-list"></i>
               <span class="menu-text"> 系统管理 </span>
@@ -373,11 +373,11 @@
             <b class="arrow"></b>
 
             <ul class="submenu">
-              <li class="">
-                <a href="tables.html">
+              <li class="active" id="system-user-sidebar">
+                <router-link to="/system/user">
                   <i class="menu-icon fa fa-caret-right"></i>
                   用户管理
-                </a>
+                </router-link>
 
                 <b class="arrow"></b>
               </li>
@@ -510,50 +510,50 @@
 </template>
 
 <script>
-export default {
-  name: "admin",
-  mounted: function() {
-    let _this = this;
-    $("body").removeClass("login-layout light-login");
-    $("body").attr("class", "no-skin");
-    // console.log("admin");
-    // sidebar激活样式方法二
-    _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
-  },
-  watch: {
-    $route: {
-      handler:function(val, oldVal){
-        // sidebar激活样式方法二
-        console.log("---->页面跳转：", val, oldVal);
-        let _this = this;
-        _this.$nextTick(function(){  //页面加载完成后执行
-          _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
-        })
-      }
-    }
-  },
-  methods: {
-    login () {
-      this.$router.push("/admin")
+  export default {
+    name: "admin",
+    mounted: function() {
+      let _this = this;
+      $("body").removeClass("login-layout light-login");
+      $("body").attr("class", "no-skin");
+      // console.log("admin");
+      // sidebar激活样式方法二
+      _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
     },
+    watch: {
+      $route: {
+        handler:function(val, oldVal){
+          // sidebar激活样式方法二
+          console.log("---->页面跳转：", val, oldVal);
+          let _this = this;
+          _this.$nextTick(function(){  //页面加载完成后执行
+            _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+          })
+        }
+      }
+    },
+    methods: {
+      login () {
+        this.$router.push("/admin")
+      },
 
-    /**
-     * 菜单激活样式，id是当前点击的菜单的id
-     * @param id
-     */
-    activeSidebar: function (id) {
-      // 兄弟菜单去掉active样式，自身增加active样式
-      $("#" + id).siblings().removeClass("active");
-      $("#" + id).siblings().find("li").removeClass("active");
-      $("#" + id).addClass("active");
+      /**
+       * 菜单激活样式，id是当前点击的菜单的id
+       * @param id
+       */
+      activeSidebar: function (id) {
+        // 兄弟菜单去掉active样式，自身增加active样式
+        $("#" + id).siblings().removeClass("active");
+        $("#" + id).siblings().find("li").removeClass("active");
+        $("#" + id).addClass("active");
 
-      // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
-      let parentLi = $("#" + id).parents("li");
-      if (parentLi) {
-        parentLi.siblings().removeClass("open active");
-        parentLi.addClass("open active");
+        // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
+        let parentLi = $("#" + id).parents("li");
+        if (parentLi) {
+          parentLi.siblings().removeClass("open active");
+          parentLi.addClass("open active");
+        }
       }
     }
   }
-}
 </script>
