@@ -518,111 +518,111 @@
 </template>
 
 <script>
-  export default {
-    name: "admin",
-    data: function() {
-      return {
-        loginUser: {},
-      }
-    },
-    mounted: function() {
-      let _this = this;
-      $("body").removeClass("login-layout light-login");
-      $("body").attr("class", "no-skin");
-      // console.log("admin");
-      // sidebar激活样式方法二
-      _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
-
-      $.getScript('/ace/assets/js/ace.min.js');
-
-      _this.loginUser = Tool.getLoginUser();
-
-      if (!_this.hasResourceRouter(_this.$route.name)) {
-        _this.$router.push("/login");
-      }
-    },
-    watch: {
-      $route: {
-        handler:function(val, oldVal){
-          // sidebar激活样式方法二
-          console.log("---->页面跳转：", val, oldVal);
-          let _this = this;
-
-          if (!_this.hasResourceRouter(val.name)) {
-            _this.$router.push("/login");
-            return;
-          }
-
-          _this.$nextTick(function(){  //页面加载完成后执行
-            _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
-          })
-        }
-      }
-    },
-    methods: {
-      /**
-       * 查找是否有权限
-       * @param router
-       */
-      hasResourceRouter(router) {
-        let _this = this;
-        let resources = Tool.getLoginUser().resources;
-        if (Tool.isEmpty(resources)) {
-          return false;
-        }
-        for (let i = 0; i < resources.length; i++) {
-          if (router === resources[i].page) {
-            return true;
-          }
-        }
-        return false;
-      },
-
-      login () {
-        this.$router.push("/admin")
-      },
-
-      /**
-       * 查找是否有权限
-       * @param id
-       */
-      hasResource(id) {
-        return Tool.hasResource(id);
-      },
-
-      /**
-       * 菜单激活样式，id是当前点击的菜单的id
-       * @param id
-       */
-      activeSidebar: function (id) {
-        // 兄弟菜单去掉active样式，自身增加active样式
-        $("#" + id).siblings().removeClass("active");
-        $("#" + id).siblings().find("li").removeClass("active");
-        $("#" + id).addClass("active");
-
-        // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
-        let parentLi = $("#" + id).parents("li");
-        if (parentLi) {
-          parentLi.siblings().removeClass("open active");
-          parentLi.siblings().find("li").removeClass("active");
-          parentLi.addClass("open active");
-        }
-      },
-
-      logout () {
-        let _this = this;
-        Loading.show();
-        _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout/' + _this.loginUser.token).then((response)=>{
-          Loading.hide();
-          let resp = response.data;
-          if (resp.success) {
-            Tool.setLoginUser(null);
-            _this.$router.push("/login")
-          } else {
-            Toast.warning(resp.message)
-          }
-        });
-      },
+export default {
+  name: "admin",
+  data: function() {
+    return {
+      loginUser: {},
     }
+  },
+  mounted: function() {
+    let _this = this;
+    $("body").removeClass("login-layout light-login");
+    $("body").attr("class", "no-skin");
+    // console.log("admin");
+    // sidebar激活样式方法二
+    _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+
+    $.getScript('/ace/assets/js/ace.min.js');
+
+    _this.loginUser = Tool.getLoginUser();
+
+    if (!_this.hasResourceRouter(_this.$route.name)) {
+      _this.$router.push("/login");
+    }
+  },
+  watch: {
+    $route: {
+      handler:function(val, oldVal){
+        // sidebar激活样式方法二
+        console.log("---->页面跳转：", val, oldVal);
+        let _this = this;
+
+        if (!_this.hasResourceRouter(val.name)) {
+          _this.$router.push("/login");
+          return;
+        }
+
+        _this.$nextTick(function(){  //页面加载完成后执行
+          _this.activeSidebar(_this.$route.name.replace("/", "-") + "-sidebar");
+        })
+      }
+    }
+  },
+  methods: {
+    /**
+     * 查找是否有权限
+     * @param router
+     */
+    hasResourceRouter(router) {
+      let _this = this;
+      let resources = Tool.getLoginUser().resources;
+      if (Tool.isEmpty(resources)) {
+        return false;
+      }
+      for (let i = 0; i < resources.length; i++) {
+        if (router === resources[i].page) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    /**
+     * 查找是否有权限
+     * @param id
+     */
+    hasResource(id) {
+      return Tool.hasResource(id);
+    },
+
+    login () {
+      this.$router.push("/admin")
+    },
+
+    /**
+     * 菜单激活样式，id是当前点击的菜单的id
+     * @param id
+     */
+    activeSidebar: function (id) {
+      // 兄弟菜单去掉active样式，自身增加active样式
+      $("#" + id).siblings().removeClass("active");
+      $("#" + id).siblings().find("li").removeClass("active");
+      $("#" + id).addClass("active");
+
+      // 如果有父菜单，父菜单的兄弟菜单去掉open active，父菜单增加open active
+      let parentLi = $("#" + id).parents("li");
+      if (parentLi) {
+        parentLi.siblings().removeClass("open active");
+        parentLi.siblings().find("li").removeClass("active");
+        parentLi.addClass("open active");
+      }
+    },
+
+    logout () {
+      let _this = this;
+      Loading.show();
+      _this.$ajax.get(process.env.VUE_APP_SERVER + '/system/admin/user/logout/' + _this.loginUser.token).then((response)=>{
+        Loading.hide();
+        let resp = response.data;
+        if (resp.success) {
+          Tool.setLoginUser(null);
+          _this.$router.push("/login")
+        } else {
+          Toast.warning(resp.message)
+        }
+      });
+    },
   }
+}
 </script>
