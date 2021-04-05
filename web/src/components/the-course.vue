@@ -11,6 +11,7 @@
         <div class="text-muted">
           <span class="badge badge-info"><i class="fa fa-yen" aria-hidden="true"></i>&nbsp;{{course.price}}</span>&nbsp;
           <span class="badge badge-info"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;123</span>&nbsp;
+          <span class="badge badge-info">{{COURSE_LEVEL | optionKV(course.level)}}</span>
         </div>
       </div>
     </div>
@@ -18,24 +19,26 @@
 </template>
 
 <script>
-export default {
-  name: 'the-course',
-  props: {
-    course: {}
-  },
-  data: function () {
-    return {}
-  },
-}
+  export default {
+    name: 'the-course',
+    props: {
+      course: {}
+    },
+    data: function () {
+      return {
+        COURSE_LEVEL: COURSE_LEVEL
+      }
+    },
+  }
 </script>
 
 <style>
-.course h4 {
-  font-size: 1.25rem;
-  margin: 15px 0;
-}
+  .course h4 {
+    font-size: 1.25rem;
+    margin: 15px 0;
+  }
 
-.course .text-muted .badge {
-  font-size: 1rem;
-}
+  .course .text-muted .badge {
+    font-size: 1rem;
+  }
 </style>
