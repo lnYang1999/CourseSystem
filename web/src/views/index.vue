@@ -5,7 +5,8 @@
       <div class="container">
         <h1>在线视频课程平台</h1>
         <p class="lead text-muted m-3">
-          本课程平台涵盖了各种领域的课程，充分满足你的学习热情。还等什么，赶快挑选属于你的课程吧！！！        </p>
+          本课程平台涵盖了各种领域的课程，充分满足你的学习热情。还等什么，赶快挑选属于你的课程吧！！！
+        </p>
         <p>
           <router-link to="/list" class="btn btn-primary my-2 p-3 font-weight-bold">点击进入所有课程</router-link>
         </p>
