@@ -77,15 +77,15 @@ public class CourseDto {
 
     private List<CategoryDto> categorys;
 
+    private List<ChapterDto> chapters;
+
+    private List<SectionDto> sections;
+
+    private String content;
+
+    private TeacherDto teacher;
+
     private String teacherId;
-
-    public List<CategoryDto> getCategorys() {
-        return categorys;
-    }
-
-    public void setCategorys(List<CategoryDto> categorys) {
-        this.categorys = categorys;
-    }
 
     public String getId() {
         return id;
@@ -191,12 +191,52 @@ public class CourseDto {
         this.updatedAt = updatedAt;
     }
 
+    public List<CategoryDto> getCategorys() {
+        return categorys;
+    }
+
+    public void setCategorys(List<CategoryDto> categorys) {
+        this.categorys = categorys;
+    }
+
     public String getTeacherId() {
         return teacherId;
     }
 
     public void setTeacherId(String teacherId) {
         this.teacherId = teacherId;
+    }
+
+    public List<ChapterDto> getChapters() {
+        return chapters;
+    }
+
+    public void setChapters(List<ChapterDto> chapters) {
+        this.chapters = chapters;
+    }
+
+    public List<SectionDto> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<SectionDto> sections) {
+        this.sections = sections;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public TeacherDto getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(TeacherDto teacher) {
+        this.teacher = teacher;
     }
 
     @Override
@@ -216,6 +256,10 @@ public class CourseDto {
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
         sb.append(", categorys=").append(categorys);
+        sb.append(", chapters=").append(chapters);
+        sb.append(", sections=").append(sections);
+        sb.append(", content='略'");
+        sb.append(", teacher=").append(teacher);
         sb.append(", teacherId='").append(teacherId).append('\'');
         sb.append('}');
         return sb.toString();
