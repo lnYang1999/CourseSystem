@@ -22,6 +22,38 @@
             </p>
           </div>
         </div>
+
+        <div class="row">
+
+          <!-- 课程内容 & 大章小节 -->
+          <div class="col-md-9">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#info" data-toggle="tab">课程介绍</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#chapter" data-toggle="tab">章节目录</a>
+              </li>
+            </ul>
+
+            <br>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane active" id="info" v-html="course.content">
+              </div>
+              <div class="tab-pane" id="chapter">
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 讲师信息 -->
+          <div class="col-md-3">
+          </div>
+
+        </div>
       </div>
     </div>
 
@@ -30,63 +62,63 @@
 
 <script>
 
-export default {
-  name: 'detail',
-  data: function () {
-    return {
-      id: "",
-      course: {},
-      teacher: {},
-      chapters: [],
-      sections: [],
-      COURSE_LEVEL: COURSE_LEVEL
-    }
-  },
-  mounted() {
-    let _this = this;
-    _this.id = _this.$route.query.id;
-    _this.findCourse();
-  },
-  methods: {
-    findCourse() {
-      let _this = this;
-      _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/web/course/find/' + _this.id).then((response)=>{
-        let resp = response.data;
-        _this.course = resp.content;
-        _this.teacher = _this.course.teacher || {};
-        _this.chapters = _this.course.chapters || [];
-        _this.sections = _this.course.sections || [];
-      })
+  export default {
+    name: 'detail',
+    data: function () {
+      return {
+        id: "",
+        course: {},
+        teacher: {},
+        chapters: [],
+        sections: [],
+        COURSE_LEVEL: COURSE_LEVEL
+      }
     },
+    mounted() {
+      let _this = this;
+      _this.id = _this.$route.query.id;
+      _this.findCourse();
+    },
+    methods: {
+      findCourse() {
+        let _this = this;
+        _this.$ajax.get(process.env.VUE_APP_SERVER + '/business/web/course/find/' + _this.id).then((response)=>{
+          let resp = response.data;
+          _this.course = resp.content;
+          _this.teacher = _this.course.teacher || {};
+          _this.chapters = _this.course.chapters || [];
+          _this.sections = _this.course.sections || [];
+        })
+      },
+    }
   }
-}
 </script>
 
 <style>
-.course-head {
-}
-.course-head h1 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-}
-.course-head-item span {
-  margin-right: 1rem;
-}
-.course-head-desc {
-  font-size: 1rem;
-  color: #555
-}
-
-.course-head a {
-}
-
-.course-head-price {
-  font-size: 2rem;
-}
-
-@media (max-width: 700px) {
-  .course-head h1 {
-    font-size: 1.5rem;
+  .course-head {
   }
-}
+  .course-head h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .course-head-item span {
+    margin-right: 1rem;
+  }
+  .course-head-desc {
+    font-size: 1rem;
+    color: #555
+  }
+
+  .course-head a {
+  }
+
+  .course-head-price {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 700px) {
+    .course-head h1 {
+      font-size: 1.5rem;
+    }
+  }
 </style>
