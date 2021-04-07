@@ -6,13 +6,13 @@
           <div class="register-div">
             <h3>注&nbsp;&nbsp;册</h3>
             <div class="form-group">
-              <input id="register-mobile" v-model="memberRegister.mobile"
+              <input id="register-mobile" v-model="clubberRegister.mobile"
                      class="form-control" placeholder="手机号">
             </div>
             <div class="form-group">
               <div class="input-group">
                 <input id="register-mobile-code" class="form-control"
-                       placeholder="手机验证码" v-model="memberRegister.code">
+                       placeholder="手机验证码" v-model="clubberRegister.code">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" id="register-send-code-btn"
                           v-on:click="sendSmsForRegister()">发送验证码
@@ -21,17 +21,17 @@
               </div>
             </div>
             <div class="form-group">
-              <input id="register-name" v-model="memberRegister.name"
+              <input id="register-name" v-model="clubberRegister.name"
                      class="form-control" placeholder="昵称">
             </div>
             <div class="form-group">
-              <input id="register-password" v-model="memberRegister.passwordOriginal"
+              <input id="register-password" v-model="clubberRegister.passwordOriginal"
                      class="form-control" placeholder="密码" type="password">
             </div>
             <div class="form-group">
-              <input id="register-confirm-password" v-model="memberRegister.confirm"
+              <input id="register-confirm-password" v-model="clubberRegister.confirm"
                      class="form-control" placeholder="确认密码"
-                     name="memberRegisterConfirm" type="password">
+                     name="clubberRegisterConfirm" type="password">
             </div>
             <div class="form-group">
               <button class="btn btn-primary btn-block submit-button" v-on:click="register()">
@@ -54,7 +54,7 @@
     name: 'the-login',
     data: function () {
       return {
-        memberRegister: {},
+        clubberRegister: {},
 
         rememberMe: true, // 记住密码
         key: "PWD", // 密码传输加密盐值
@@ -76,10 +76,10 @@
 
       register() {
         let _this = this;
-        _this.memberRegister.password = hex_md5(_this.memberRegister.passwordOriginal + KEY);
+        _this.clubberRegister.password = hex_md5(_this.clubberRegister.passwordOriginal + KEY);
 
         // 调服务端注册接口
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/web/clubber/register', _this.memberRegister).then((response) => {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/web/clubber/register', _this.clubberRegister).then((response) => {
           let resp = response.data;
           if (resp.success) {
             Toast.success("注册成功");
