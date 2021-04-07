@@ -53,6 +53,7 @@ public class ClubberService {
     private void insert(Clubber clubber) {
                 Date now = new Date();
         clubber.setId(UuidUtil.getShortUuid());
+        clubber.setRegisterTime(now);
         clubberMapper.insert(clubber);
     }
 
