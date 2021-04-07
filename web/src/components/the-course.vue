@@ -47,6 +47,6 @@
   }
 
   #course-card-text{
-    height: 160px;
+    height: 200px;
   }
 </style>
