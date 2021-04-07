@@ -22,13 +22,13 @@
       </thead>
 
       <tbody>
-      <tr v-for="member in members">
-        <td>{{member.id}}</td>
-        <td>{{member.mobile}}</td>
-        <td>{{member.password}}</td>
-        <td>{{member.name}}</td>
-        <td>{{member.photo}}</td>
-        <td>{{member.registerTime}}</td>
+      <tr v-for="clubber in clubbers">
+        <td>{{clubber.id}}</td>
+        <td>{{clubber.mobile}}</td>
+        <td>{{clubber.password}}</td>
+        <td>{{clubber.name}}</td>
+        <td>{{clubber.photo}}</td>
+        <td>{{clubber.registerTime}}</td>
       </tr>
       </tbody>
     </table>
@@ -40,11 +40,11 @@
   import Pagination from "../../components/pagination";
   export default {
     components: {Pagination},
-    name: "business-member",
+    name: "business-clubber",
     data: function() {
       return {
-        member: {},
-        members: [],
+        clubber: {},
+        clubbers: [],
       }
     },
     mounted: function() {
@@ -52,7 +52,7 @@
       _this.$refs.pagination.size = 5;
       _this.list(1);
       // sidebar激活样式方法一
-      // this.$parent.activeSidebar("business-member-sidebar");
+      // this.$parent.activeSidebar("business-clubber-sidebar");
 
     },
     methods: {
@@ -62,13 +62,13 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/member/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/clubber/list', {
           page: page,
           size: _this.$refs.pagination.size,
         }).then((response)=>{
           Loading.hide();
           let resp = response.data;
-          _this.members = resp.content.list;
+          _this.clubbers = resp.content.list;
           _this.$refs.pagination.render(page, resp.content.total);
 
         })
