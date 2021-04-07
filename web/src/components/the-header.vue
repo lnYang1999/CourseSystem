@@ -28,7 +28,7 @@
               </div>
             </li>
           </ul>
-          <span class="text-white">欢迎：</span>
+          <span v-show="loginClubber.id" class="text-white">欢迎：</span>
           <button v-on:click="openLoginModal()" class="btn btn-outline-light my-2 my-sm-0" type="submit">登录/注册</button>
         </div>
       </div>
@@ -44,6 +44,15 @@
   export default {
     name: 'theHeader',
     components: {TheLogin},
+    data: function () {
+      return {
+        loginClubber: {}
+      }
+    },
+    mounted() {
+      let _this = this;
+      _this.loginClubber = Tool.getLoginClubber();
+    },
     methods: {
       /**
        * 打开登录注册窗口
@@ -53,6 +62,10 @@
         _this.$refs.loginComponent.openLoginModal();
       },
 
+      setLoginClubber(loginClubber) {
+        let _this = this;
+        _this.loginClubber = loginClubber;
+      },
     }
   }
 </script>

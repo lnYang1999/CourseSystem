@@ -229,8 +229,9 @@
               LocalStorage.set(LOCAL_KEY_REMEMBER_CLUBBER, null);
             }
 
-            // 登录成功 TODO
-
+            // 登录成功
+            _this.$parent.setLoginClubber(loginClubber);
+            $("#login-modal").modal("hide");
 
           } else {
             Toast.warning(resp.message);
