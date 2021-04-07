@@ -9,7 +9,7 @@
               <input v-model="clubber.mobile" class="form-control" placeholder="手机号">
             </div>
             <div class="form-group">
-              <input class="form-control" type="password" placeholder="密码" v-model="clubber.passwordOriginal">
+              <input class="form-control" type="password" placeholder="密码" v-model="clubber.password">
             </div>
             <div class="form-group">
               <div class="input-group">
@@ -21,7 +21,7 @@
               </div>
             </div>
             <div class="form-group">
-              <button class="btn btn-primary btn-block submit-button">
+              <button v-on:click="login()" class="btn btn-primary btn-block submit-button">
                 登&nbsp;&nbsp;录
               </button>
             </div>
@@ -184,6 +184,56 @@
       },
 
       //---------------登录框-----------------
+      login () {
+        let _this = this;
+
+        // 将明文存储到缓存中
+        // let passwordShow = _this.clubber.password;
+
+        // 如果密码是从缓存带出来的，则不需要重新加密
+        let md5 = hex_md5(_this.clubber.password);
+        let rememberClubber = LocalStorage.get(LOCAL_KEY_REMEMBER_CLUBBER) || {};
+        if (md5 !== rememberClubber.md5) {
+          _this.clubber.password = hex_md5(_this.clubber.password + KEY);
+        }
+
+        _this.clubber.imageCodeToken = _this.imageCodeToken;
+
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/web/clubber/login', _this.clubber).then((response)=>{
+          let resp = response.data;
+          if (resp.success) {
+            console.log("登录成功：", resp.content);
+            let loginClubber = resp.content;
+            Tool.setLoginClubber(resp.content);
+
+            // 判断“记住我”
+            if (_this.remember) {
+              // 如果勾选记住我，则将用户名密码保存到本地缓存
+              // 原：这里需要保存密码明文，否则登录时又会再加一层密
+              // 新：这里保存密码密文，并保存密文md5，用于检测密码是否被重新输入过
+              let md5 = hex_md5(_this.clubber.password);
+              LocalStorage.set(LOCAL_KEY_REMEMBER_CLUBBER, {
+                loginName: loginClubber.loginName,
+                // password: _this.clubber.passwordShow,
+                password: _this.clubber.password,
+                md5: md5
+              });
+            } else {
+              // 没有勾选“记住我”时，要把本地缓存清空，否则按照mounted的逻辑，下次打开时会自动显示用户名密码
+              LocalStorage.set(LOCAL_KEY_REMEMBER_CLUBBER, null);
+            }
+
+            // 登录成功 TODO
+
+
+          } else {
+            Toast.warning(resp.message);
+            _this.clubber.password = "";
+            _this.loadImageCode();
+          }
+        });
+      },
+
       /**
        * 加载图形验证码
        */
