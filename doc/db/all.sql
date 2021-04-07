@@ -262,8 +262,8 @@ create table `role_user` (
 insert into `role_user` values ('00000000', '00000000', '10000000');
 
 -- 会员
-drop table if exists `member`;
-create table `member` (
+drop table if exists `clubber`;
+create table `clubber` (
                           `id` char(8) not null default '' comment 'id',
                           `mobile` varchar(11) comment '手机号',
                           `password` char(32) not null comment '密码',
@@ -275,7 +275,7 @@ create table `member` (
 ) engine=innodb default charset=utf8mb4 comment='会员';
 
 # 初始test/test
-insert into `member` (id, mobile, password, name, photo, register_time) values ('00000000', '12345678901', 'e70e2222a9d67c4f2eae107533359aa4', '测试', null, now());
+insert into `clubber` (id, mobile, password, name, photo, register_time) values ('00000000', '12345678901', 'e70e2222a9d67c4f2eae107533359aa4', '测试', null, now());
 
 # ---------------------- 测试
 

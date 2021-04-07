@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.course.server.mapper.MemberMapper">
-  <resultMap id="BaseResultMap" type="com.course.server.domain.Member">
+<mapper namespace="com.course.server.mapper.ClubberMapper">
+  <resultMap id="BaseResultMap" type="com.course.server.domain.Clubber">
     <id column="id" jdbcType="CHAR" property="id" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="password" jdbcType="CHAR" property="password" />
@@ -70,13 +70,13 @@
   <sql id="Base_Column_List">
     id, mobile, `password`, `name`, photo, register_time
   </sql>
-  <select id="selectByExample" parameterType="com.course.server.domain.MemberExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.course.server.domain.ClubberExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from member
+    from clubber
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,29 +87,29 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from member
+    from clubber
     where id = #{id,jdbcType=CHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from member
+    delete from clubber
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <delete id="deleteByExample" parameterType="com.course.server.domain.MemberExample">
-    delete from member
+  <delete id="deleteByExample" parameterType="com.course.server.domain.ClubberExample">
+    delete from clubber
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.course.server.domain.Member">
-    insert into member (id, mobile, `password`, 
+  <insert id="insert" parameterType="com.course.server.domain.Clubber">
+    insert into clubber (id, mobile, `password`, 
       `name`, photo, register_time
       )
     values (#{id,jdbcType=CHAR}, #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, 
       #{name,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.course.server.domain.Member">
-    insert into member
+  <insert id="insertSelective" parameterType="com.course.server.domain.Clubber">
+    insert into clubber
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -151,14 +151,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.course.server.domain.MemberExample" resultType="java.lang.Long">
-    select count(*) from member
+  <select id="countByExample" parameterType="com.course.server.domain.ClubberExample" resultType="java.lang.Long">
+    select count(*) from clubber
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update member
+    update clubber
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=CHAR},
@@ -184,7 +184,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update member
+    update clubber
     set id = #{record.id,jdbcType=CHAR},
       mobile = #{record.mobile,jdbcType=VARCHAR},
       `password` = #{record.password,jdbcType=CHAR},
@@ -195,8 +195,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.course.server.domain.Member">
-    update member
+  <update id="updateByPrimaryKeySelective" parameterType="com.course.server.domain.Clubber">
+    update clubber
     <set>
       <if test="mobile != null">
         mobile = #{mobile,jdbcType=VARCHAR},
@@ -216,8 +216,8 @@
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.course.server.domain.Member">
-    update member
+  <update id="updateByPrimaryKey" parameterType="com.course.server.domain.Clubber">
+    update clubber
     set mobile = #{mobile,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=CHAR},
       `name` = #{name,jdbcType=VARCHAR},

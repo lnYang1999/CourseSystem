@@ -2,7 +2,7 @@ package com.course.server.domain;
 
 import java.util.Date;
 
-public class Member {
+public class Clubber {
     private String id;
 
     private String mobile;

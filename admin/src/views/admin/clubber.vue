@@ -28,19 +28,19 @@
       </thead>
 
       <tbody>
-      <tr v-for="member in members">
-              <td>{{member.id}}</td>
-              <td>{{member.mobile}}</td>
-              <td>{{member.password}}</td>
-              <td>{{member.name}}</td>
-              <td>{{member.photo}}</td>
-              <td>{{member.registerTime}}</td>
+      <tr v-for="clubber in clubbers">
+              <td>{{clubber.id}}</td>
+              <td>{{clubber.mobile}}</td>
+              <td>{{clubber.password}}</td>
+              <td>{{clubber.name}}</td>
+              <td>{{clubber.photo}}</td>
+              <td>{{clubber.registerTime}}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
-            <button v-on:click="edit(member)" class="btn btn-xs btn-info">
+            <button v-on:click="edit(clubber)" class="btn btn-xs btn-info">
               <i class="ace-icon fa fa-pencil bigger-120"></i>
             </button>
-            <button v-on:click="del(member.id)" class="btn btn-xs btn-danger">
+            <button v-on:click="del(clubber.id)" class="btn btn-xs btn-danger">
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
           </div>
@@ -61,31 +61,31 @@
                     <div class="form-group">
                       <label class="col-sm-2 control-label">手机号</label>
                       <div class="col-sm-10">
-                        <input v-model="member.mobile" class="form-control">
+                        <input v-model="clubber.mobile" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label">密码</label>
                       <div class="col-sm-10">
-                        <input v-model="member.password" class="form-control">
+                        <input v-model="clubber.password" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label">昵称</label>
                       <div class="col-sm-10">
-                        <input v-model="member.name" class="form-control">
+                        <input v-model="clubber.name" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label">头像url</label>
                       <div class="col-sm-10">
-                        <input v-model="member.photo" class="form-control">
+                        <input v-model="clubber.photo" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label">注册时间</label>
                       <div class="col-sm-10">
-                        <input v-model="member.registerTime" class="form-control">
+                        <input v-model="clubber.registerTime" class="form-control">
                       </div>
                     </div>
             </form>
@@ -104,11 +104,11 @@
   import Pagination from "../../components/pagination";
   export default {
     components: {Pagination},
-    name: "business-member",
+    name: "business-clubber",
     data: function() {
       return {
-        member: {},
-        members: [],
+        clubber: {},
+        clubbers: [],
       }
     },
     mounted: function() {
@@ -116,7 +116,7 @@
       _this.$refs.pagination.size = 5;
       _this.list(1);
       // sidebar激活样式方法一
-      // this.$parent.activeSidebar("business-member-sidebar");
+      // this.$parent.activeSidebar("business-clubber-sidebar");
 
     },
     methods: {
@@ -125,16 +125,16 @@
        */
       add() {
         let _this = this;
-        _this.member = {};
+        _this.clubber = {};
         $("#form-modal").modal("show");
       },
 
       /**
        * 点击【编辑】
        */
-      edit(member) {
+      edit(clubber) {
         let _this = this;
-        _this.member = $.extend({}, member);
+        _this.clubber = $.extend({}, clubber);
         $("#form-modal").modal("show");
       },
 
@@ -144,13 +144,13 @@
       list(page) {
         let _this = this;
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/member/list', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/clubber/list', {
           page: page,
           size: _this.$refs.pagination.size,
         }).then((response)=>{
           Loading.hide();
           let resp = response.data;
-          _this.members = resp.content.list;
+          _this.clubbers = resp.content.list;
           _this.$refs.pagination.render(page, resp.content.total);
 
         })
@@ -164,16 +164,16 @@
 
         // 保存校验
         if (1 != 1
-                || !Validator.length(_this.member.mobile, "手机号", 1, 11)
-                || !Validator.require(_this.member.password, "密码")
-                || !Validator.length(_this.member.name, "昵称", 1, 50)
-                || !Validator.length(_this.member.photo, "头像url", 1, 200)
+                || !Validator.length(_this.clubber.mobile, "手机号", 1, 11)
+                || !Validator.require(_this.clubber.password, "密码")
+                || !Validator.length(_this.clubber.name, "昵称", 1, 50)
+                || !Validator.length(_this.clubber.photo, "头像url", 1, 200)
         ) {
           return;
         }
 
         Loading.show();
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/member/save', _this.member).then((response)=>{
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/clubber/save', _this.clubber).then((response)=>{
           Loading.hide();
           let resp = response.data;
           if (resp.success) {
@@ -193,7 +193,7 @@
         let _this = this;
         Confirm.show("删除会员后不可恢复，确认删除？", function () {
           Loading.show();
-          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/member/delete/' + id).then((response)=>{
+          _this.$ajax.delete(process.env.VUE_APP_SERVER + '/business/admin/clubber/delete/' + id).then((response)=>{
             Loading.hide();
             let resp = response.data;
             if (resp.success) {
