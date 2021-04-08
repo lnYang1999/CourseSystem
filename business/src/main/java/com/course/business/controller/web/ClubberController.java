@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.course.server.dto.ClubberDto;
 import com.course.server.dto.LoginClubberDto;
 import com.course.server.dto.ResponseDto;
+import com.course.server.dto.SmsDto;
+import com.course.server.enums.SmsUseEnum;
 import com.course.server.exception.BusinessException;
 import com.course.server.service.ClubberService;
+import com.course.server.service.SmsService;
 import com.course.server.util.UuidUtil;
 import com.course.server.util.ValidatorUtil;
 import org.slf4j.Logger;
@@ -31,6 +34,9 @@ public class ClubberController {
     @Resource(name = "redisTemplate")
     private RedisTemplate redisTemplate;
 
+    @Resource
+    private SmsService smsService;
+
     /**
      * 保存，id有值时更新，无值时新增
      */
@@ -45,6 +51,14 @@ public class ClubberController {
 
         // 密码加密
         clubberDto.setPassword(DigestUtils.md5DigestAsHex(clubberDto.getPassword().getBytes()));
+
+        // 校验短信验证码
+        SmsDto smsDto = new SmsDto();
+        smsDto.setMobile(clubberDto.getMobile());
+        smsDto.setCode(clubberDto.getSmsCode());
+        smsDto.setUse(SmsUseEnum.REGISTER.getCode());
+        smsService.validCode(smsDto);
+        LOG.info("短信验证码校验通过");
 
         ResponseDto responseDto = new ResponseDto();
         clubberService.save(clubberDto);
