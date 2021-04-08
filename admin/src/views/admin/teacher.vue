@@ -17,7 +17,7 @@
     <div class="row">
       <div v-for="teacher in teachers" class="col-md-3">
         <div>
-          <span class="profile-picture">
+          <span class="profile-picture" id="teacherImg">
             <img v-show="!teacher.image" class="editable img-responsive editable-click editable-empty" src="/static/image/讲师头像/头像1.jpg" v-bind:title="teacher.intro"/>
             <img v-show="teacher.image" class="editable img-responsive editable-click editable-empty" v-bind:src="teacher.image" v-bind:title="teacher.intro"/>
           </span>
@@ -126,7 +126,6 @@
     </div><!-- /.modal -->
   </div>
 </template>
-
 <script>
   import Pagination from "../../components/pagination";
   import File from "../../components/file";
