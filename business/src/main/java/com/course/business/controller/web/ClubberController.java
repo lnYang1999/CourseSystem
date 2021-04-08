@@ -129,4 +129,24 @@ public class ClubberController {
         }
         return responseDto;
     }
+
+    @PostMapping("/reset-password")
+    public ResponseDto resetPassword(@RequestBody ClubberDto clubberDto) throws BusinessException {
+        LOG.info("会员密码重置开始:");
+        clubberDto.setPassword(DigestUtils.md5DigestAsHex(clubberDto.getPassword().getBytes()));
+        ResponseDto<ClubberDto> responseDto = new ResponseDto();
+
+        // 校验短信验证码
+        SmsDto smsDto = new SmsDto();
+        smsDto.setMobile(clubberDto.getMobile());
+        smsDto.setCode(clubberDto.getSmsCode());
+        smsDto.setUse(SmsUseEnum.FORGET.getCode());
+        smsService.validCode(smsDto);
+        LOG.info("短信验证码校验通过");
+
+        // 重置密码
+        clubberService.resetPassword(clubberDto);
+
+        return responseDto;
+    }
 }

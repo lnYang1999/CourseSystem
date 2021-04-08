@@ -128,4 +128,19 @@ public class ClubberService {
             }
         }
     }
+
+    /**
+     * 重置密码
+     */
+    public void resetPassword(ClubberDto clubberDto) throws BusinessException {
+        Clubber clubberDb = this.selectByMobile(clubberDto.getMobile());
+        if (clubberDb == null) {
+            throw new BusinessException(BusinessExceptionCode.CLUBBER_NOT_EXIST);
+        } else {
+            Clubber clubber = new Clubber();
+            clubber.setId(clubberDb.getId());
+            clubber.setPassword(clubberDto.getPassword());
+            clubberMapper.updateByPrimaryKeySelective(clubber);
+        }
+    }
 }
