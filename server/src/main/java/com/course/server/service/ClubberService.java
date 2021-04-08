@@ -83,6 +83,16 @@ public class ClubberService {
      * @param mobile
      * @return
      */
+    public ClubberDto findByMobile(String mobile) {
+        Clubber clubber = this.selectByMobile(mobile);
+        return CopyUtil.copy(clubber, ClubberDto.class);
+    }
+
+    /**
+     * 按手机号查找
+     * @param mobile
+     * @return
+     */
     public Clubber selectByMobile(String mobile) {
         if (StringUtils.isEmpty(mobile)) {
             return null;
