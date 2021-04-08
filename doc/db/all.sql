@@ -274,6 +274,20 @@ create table `clubber` (
                           unique key `mobile_unique` (`mobile`)
 ) engine=innodb default charset=utf8mb4 comment='会员';
 
+# 短信验证码
+drop table if exists `sms`;
+create table `sms` (
+                       `id` char(8) not null default '' comment 'id',
+                       `mobile` varchar(50) not null comment '手机号',
+                       `code` char(6) not null comment '验证码',
+                       `use` char(1) not null comment '用途|枚举[SmsUseEnum]：REGISTER("R", "注册"), FORGET("F", "忘记密码")',
+                       `at` datetime not null comment '生成时间',
+                       `status` char(1) not null comment '用途|枚举[SmsStatusEnum]：USED("U", "已使用"), NOT_USED("N", "未使用")',
+                       primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='短信验证码';
+
+insert into `sms` (id, mobile, code, `use`, at, status) values ('00000000', '12345678901', '123456', 'R', now(), 'N');
+
 # 初始test/test
 insert into `clubber` (id, mobile, password, name, photo, register_time) values ('00000000', '12345678901', 'e70e2222a9d67c4f2eae107533359aa4', '测试', null, now());
 
