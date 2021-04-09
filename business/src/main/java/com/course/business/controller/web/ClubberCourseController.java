@@ -36,12 +36,13 @@ public class ClubberCourseController {
     }
 
     /**
-     * 删除
+     * 保存，id有值时更新，无值时新增
      */
-    @DeleteMapping("/delete/{id}")
-    public ResponseDto delete(@PathVariable String id) {
+    @PostMapping("/get-enroll")
+    public ResponseDto getEnroll(@RequestBody ClubberCourseDto clubberCourseDto) {
         ResponseDto responseDto = new ResponseDto();
-        clubberCourseService.delete(id);
+        clubberCourseDto = clubberCourseService.getEnroll(clubberCourseDto);
+        responseDto.setContent(clubberCourseDto);
         return responseDto;
     }
 }

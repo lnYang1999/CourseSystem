@@ -104,4 +104,12 @@ public class ClubberCourseService {
             return clubberCourseList.get(0);
         }
     }
+
+    /**
+     * 获取报名信息
+     */
+    public ClubberCourseDto getEnroll(ClubberCourseDto clubberCourseDto) {
+        ClubberCourse clubberCourse = this.select(clubberCourseDto.getClubberId(), clubberCourseDto.getCourseId());
+        return CopyUtil.copy(clubberCourse, ClubberCourseDto.class);
+    }
 }
