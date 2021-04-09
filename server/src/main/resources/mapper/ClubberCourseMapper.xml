@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.course.server.mapper.ClubberCourseMapper">
+  <resultMap id="BaseResultMap" type="com.course.server.domain.ClubberCourse">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="clubber_id" jdbcType="CHAR" property="clubberId" />
+    <result column="course_id" jdbcType="CHAR" property="courseId" />
+    <result column="at" jdbcType="TIMESTAMP" property="at" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, clubber_id, course_id, `at`
+  </sql>
+  <select id="selectByExample" parameterType="com.course.server.domain.ClubberCourseExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from clubber_course
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clubber_course
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from clubber_course
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.course.server.domain.ClubberCourseExample">
+    delete from clubber_course
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.course.server.domain.ClubberCourse">
+    insert into clubber_course (id, clubber_id, course_id, 
+      `at`)
+    values (#{id,jdbcType=CHAR}, #{clubberId,jdbcType=CHAR}, #{courseId,jdbcType=CHAR}, 
+      #{at,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.course.server.domain.ClubberCourse">
+    insert into clubber_course
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="clubberId != null">
+        clubber_id,
+      </if>
+      <if test="courseId != null">
+        course_id,
+      </if>
+      <if test="at != null">
+        `at`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="clubberId != null">
+        #{clubberId,jdbcType=CHAR},
+      </if>
+      <if test="courseId != null">
+        #{courseId,jdbcType=CHAR},
+      </if>
+      <if test="at != null">
+        #{at,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.course.server.domain.ClubberCourseExample" resultType="java.lang.Long">
+    select count(*) from clubber_course
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update clubber_course
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=CHAR},
+      </if>
+      <if test="record.clubberId != null">
+        clubber_id = #{record.clubberId,jdbcType=CHAR},
+      </if>
+      <if test="record.courseId != null">
+        course_id = #{record.courseId,jdbcType=CHAR},
+      </if>
+      <if test="record.at != null">
+        `at` = #{record.at,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update clubber_course
+    set id = #{record.id,jdbcType=CHAR},
+      clubber_id = #{record.clubberId,jdbcType=CHAR},
+      course_id = #{record.courseId,jdbcType=CHAR},
+      `at` = #{record.at,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.course.server.domain.ClubberCourse">
+    update clubber_course
+    <set>
+      <if test="clubberId != null">
+        clubber_id = #{clubberId,jdbcType=CHAR},
+      </if>
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=CHAR},
+      </if>
+      <if test="at != null">
+        `at` = #{at,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.course.server.domain.ClubberCourse">
+    update clubber_course
+    set clubber_id = #{clubberId,jdbcType=CHAR},
+      course_id = #{courseId,jdbcType=CHAR},
+      `at` = #{at,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>
