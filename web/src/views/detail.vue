@@ -209,18 +209,18 @@
        */
       getEnroll() {
         let _this = this;
-        let loginMember = Tool.getLoginMember();
-        if (Tool.isEmpty(loginMember)) {
+        let loginClubber = Tool.getLoginClubber();
+        if (Tool.isEmpty(loginClubber)) {
           console.log("未登录");
           return;
         }
-        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/web/member-course/get-enroll', {
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/web/clubber-course/get-enroll', {
           courseId: _this.course.id,
-          memberId: loginMember.id
+          clubberId: loginClubber.id
         }).then((response)=>{
           let resp = response.data;
           if (resp.success) {
-            _this.memberCourse = resp.content || {};
+            _this.clubberCourse = resp.content || {};
           }
         });
       },
