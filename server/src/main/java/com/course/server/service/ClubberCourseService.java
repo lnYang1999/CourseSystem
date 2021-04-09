@@ -10,11 +10,12 @@ import com.course.server.util.UuidUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ClubberCourseService {
@@ -51,8 +52,9 @@ public class ClubberCourseService {
      * 新增
      */
     private void insert(ClubberCourse clubberCourse) {
-                Date now = new Date();
+        Date now = new Date();
         clubberCourse.setId(UuidUtil.getShortUuid());
+        clubberCourse.setAt(now);
         clubberCourseMapper.insert(clubberCourse);
     }
 
@@ -68,5 +70,38 @@ public class ClubberCourseService {
      */
     public void delete(String id) {
         clubberCourseMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 报名，先判断是否已报名
+     * @param clubberCourseDto
+     */
+    public ClubberCourseDto enroll(ClubberCourseDto clubberCourseDto) {
+        ClubberCourse clubberCourseDb = this.select(clubberCourseDto.getClubberId(), clubberCourseDto.getCourseId());
+        if (clubberCourseDb == null) {
+            ClubberCourse clubberCourse = CopyUtil.copy(clubberCourseDto, ClubberCourse.class);
+            this.insert(clubberCourse);
+            // 将数据库信息全部返回，包括id, at
+            return CopyUtil.copy(clubberCourse, ClubberCourseDto.class);
+        } else {
+            // 如果已经报名，则直接返回已报名的信息
+            return CopyUtil.copy(clubberCourseDb, ClubberCourseDto.class);
+        }
+    }
+
+    /**
+     * 根据clubberId和courseId查询记录
+     */
+    public ClubberCourse select(String clubberId, String courseId) {
+        ClubberCourseExample example = new ClubberCourseExample();
+        example.createCriteria()
+                .andCourseIdEqualTo(courseId)
+                .andClubberIdEqualTo(clubberId);
+        List<ClubberCourse> clubberCourseList = clubberCourseMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(clubberCourseList)) {
+            return null;
+        } else {
+            return clubberCourseList.get(0);
+        }
     }
 }
