@@ -18,6 +18,9 @@
               <router-link class="nav-link" to="/list">全部课程</router-link>
             </li>
             <li class="nav-item active">
+              <router-link class="nav-link" to="/line">学习路线</router-link>
+            </li>
+            <li class="nav-item active">
               <router-link class="nav-link" to="/about">关于我</router-link>
             </li>
           </ul>
