@@ -55,18 +55,33 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">标题</label>
-                      <div class="col-sm-10">
-                        <input v-model="line.title" class="form-control">
-                      </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">标题</label>
+                <div class="col-sm-10">
+                  <input v-model="line.title" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">详细描述</label>
+                <div class="col-sm-10">
+                  <textarea v-model="line.desc" class="form-control" rows="5"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">路线图片</label>
+                <div class="col-sm-10">
+                  <big-file v-bind:input-id="'image-upload'"
+                            v-bind:text="'上传图片'"
+                            v-bind:suffixs="['jpg', 'jpeg', 'png']"
+                            v-bind:use="FILE_USE.TEACHER.key"
+                            v-bind:after-upload="afterUpload"></big-file>
+                  <div v-show="line.image" class="row">
+                    <div class="col-md-4">
+                      <img v-bind:src="line.image" class="img-responsive">
                     </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">详细描述</label>
-                      <div class="col-sm-10">
-                        <textarea v-model="line.desc" class="form-control" rows="5"></textarea>
-                      </div>
-                    </div>
+                  </div>
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -81,13 +96,17 @@
 
 <script>
   import Pagination from "../../components/pagination";
+  import BigFile from "../../components/big-file";
+  import File from "../../components/file";
+
   export default {
-    components: {Pagination},
+    components: {Pagination, File, BigFile},
     name: "business-line",
     data: function() {
       return {
         line: {},
         lines: [],
+        FILE_USE: FILE_USE,
       }
     },
     mounted: function() {
@@ -147,6 +166,7 @@
                 || !Validator.length(_this.line.title, "标题", 1, 100)
                 || !Validator.require(_this.line.desc, "详细描述")
                 || !Validator.length(_this.line.desc, "详细描述", 1, 200)
+                || !Validator.length(_this.line.image, "图片", 1, 100)
         ) {
           return;
         }
@@ -191,6 +211,14 @@
         SessionStorage.set(SESSION_KEY_LINE, line);
         _this.$router.push("/business/courseLine");
       },
+
+      afterUpload(resp) {
+        let _this = this;
+        let image = resp.content.path;
+        _this.line.image = image;
+        // 新增学习路线，上传头像后不能实时预览，解决方法二
+        _this.$forceUpdate();
+      }
     }
   }
 </script>

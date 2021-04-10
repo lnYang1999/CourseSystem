@@ -65,7 +65,7 @@
   }, {
     "id": "0209", "name": "路线管理", "page": "business/line",
     "children": [
-      {"id": "020901", "name": "增删改查", "request": ["/business/admin/line"]}
+      {"id": "020901", "name": "增删改查", "request": ["/business/admin/line","/file"]}
     ]
   }, {
     "id": "0210", "name": "课程路线管理", "page": "business/courseLine",

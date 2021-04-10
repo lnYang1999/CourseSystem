@@ -310,10 +310,12 @@ create table `line` (
                               `id` char(8) not null default '' comment 'id',
                               `title` varchar(100) not null comment '标题',
                               `desc` varchar(200) not null comment '详细描述',
+                              `image` varchar(100) comment '图片',
                               primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='学习路线';
 
-insert into `line` values ('00000001', '大学数学必修课', '包含大学数学必须学习的三门课程：高等数学、线性代数、概率论与数理统计，这三门课程均有明星讲师张三老师倾情奉献，保证你听后获益匪浅');
+insert into `line` values ('00000001', '大学数学必修课', '包含大学数学必须学习的三门课程：高等数学、线性代数、概率论与数理统计，这三门课程均有明星讲师张三老师倾情奉献，保证你听后获益匪浅','test');
+insert into `line` values ('00000002', '考研数学高数全程班', '该路线包含考研数学高数学习的基础、强化、冲刺三个阶段，并附赠习题讲解和历年真题，由考研数学高数明星教师周力保讲解，保你数学拿高分！！！','test');
 
 # 课程路线
 drop table if exists `course_line`;

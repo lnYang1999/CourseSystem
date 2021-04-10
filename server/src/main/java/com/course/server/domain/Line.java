@@ -7,6 +7,8 @@ public class Line {
 
     private String desc;
 
+    private String image;
+
     public String getId() {
         return id;
     }
@@ -31,6 +33,14 @@ public class Line {
         this.desc = desc;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -40,6 +50,7 @@ public class Line {
         sb.append(", id=").append(id);
         sb.append(", title=").append(title);
         sb.append(", desc=").append(desc);
+        sb.append(", image=").append(image);
         sb.append("]");
         return sb.toString();
     }

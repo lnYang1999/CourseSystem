@@ -42,6 +42,7 @@ public class LineController {
         ValidatorUtil.length(lineDto.getTitle(), "标题", 1, 100);
         ValidatorUtil.require(lineDto.getDesc(), "详细描述");
         ValidatorUtil.length(lineDto.getDesc(), "详细描述", 1, 200);
+        ValidatorUtil.length(lineDto.getImage(), "头像", 1, 100);
 
         ResponseDto responseDto = new ResponseDto();
         lineService.save(lineDto);

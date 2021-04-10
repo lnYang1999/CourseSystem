@@ -137,7 +137,7 @@
       return {
         teacher: {},
         teachers: [],
-        FILE_USE: FILE_USE
+        FILE_USE: FILE_USE,
       }
     },
     mounted: function() {

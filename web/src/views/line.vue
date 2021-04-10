@@ -13,9 +13,9 @@
       <div class="listview">
         <div v-for="line in lines">
           <div class="aBox">
-            <a href="#" style="cursor:pointer">
+            <a v-on:click="toCourseLine(line)" style="cursor:pointer">
               <div class="imgcontainer">
-                <img class="img-fluid" src="../../public/static/image/unknow-80.png" id="line-img">
+                <img class="img-fluid" v-bind:src="line.image" id="line-img">
               </div>
             </a>
             <div class="lineitem">
@@ -67,6 +67,15 @@
         }).catch((response) => {
           console.log("error：", response);
         })
+      },
+
+      /**
+       * 点击【课程路线】
+       */
+      toCourseLine(line) {
+        let _this = this;
+        SessionStorage.set(SESSION_KEY_LINE, line);
+        _this.$router.push("/courseLine");
       },
     }
   }

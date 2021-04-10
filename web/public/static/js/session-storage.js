@@ -1,4 +1,5 @@
 SESSION_KEY_LOGIN_MEMBER = "SESSION_KEY_LOGIN_MEMBER"; // 登录信息
+SESSION_KEY_LINE = "SESSION_KEY_LINE"; // 路线管理页面点击课程路线管理时，保存路线信息
 
 SessionStorage = {
   get: function (key) {
