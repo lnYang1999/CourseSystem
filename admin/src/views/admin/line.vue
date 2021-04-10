@@ -61,7 +61,7 @@
                     <div class="form-group">
                       <label class="col-sm-2 control-label">详细描述</label>
                       <div class="col-sm-10">
-                        <input v-model="line.desc" class="form-control">
+                        <textarea v-model="line.desc" class="form-control" rows="5"></textarea>
                       </div>
                     </div>
             </form>
