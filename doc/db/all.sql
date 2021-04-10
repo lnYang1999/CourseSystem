@@ -304,6 +304,30 @@ create table `clubber_course` (
 # 初始test/test
 insert into `clubber` (id, mobile, password, name, photo, register_time) values ('00000000', '12345678901', 'e70e2222a9d67c4f2eae107533359aa4', '测试', null, now());
 
+# 学习路线
+drop table if exists `line`;
+create table `line` (
+                              `id` char(8) not null default '' comment 'id',
+                              `title` varchar(100) not null comment '标题',
+                              `desc` varchar(200) not null comment '详细描述',
+                              primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='学习路线';
+
+insert into `line` values ('00000001', '大学数学必修课', '包含大学数学必须学习的三门课程：高等数学、线性代数、概率论与数理统计，这三门课程均有明星讲师张三老师倾情奉献，保证你听后获益匪浅');
+
+# 课程路线
+drop table if exists `course_line`;
+create table `course_line` (
+                        `id` char(8) not null default '' comment 'id',
+                        `line_id` char(8) not null comment '学习路线id',
+                        `course_id` char(8) not null comment '课程id',
+                        primary key (`id`),
+                        unique key `course_line_unique` (`line_id`, `course_id`)
+) engine=innodb default charset=utf8mb4 comment='课程路线';
+
+insert into course_line values ('00000001','00000001','mHsP38rg');
+insert into course_line values ('00000001','00000001','z4wmAyEq');
+
 # ---------------------- 测试
 
 drop table if exists `test`;

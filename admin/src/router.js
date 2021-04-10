@@ -15,6 +15,7 @@ import Resource from "./views/admin/resource.vue"
 import Role from "./views/admin/role.vue"
 import Clubber from "./views/admin/clubber.vue"
 import Sms from "./views/admin/sms.vue"
+import Line from "./views/admin/line.vue"
 
 Vue.use(Router);
 
@@ -61,6 +62,10 @@ export default new Router({
             path: "business/content",
             name: "business/content",
             component: Content,
+        }, {
+            path: "business/line",
+            name: "business/line",
+            component: Line,
         }, {
             path: "business/teacher",
             name: "business/teacher",

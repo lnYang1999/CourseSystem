@@ -16,8 +16,8 @@
 
     <div class="row">
       <div v-for="course in courses" class="col-md-4">
-        <div class="thumbnail search-thumbnail">
-          <img v-show="!course.image" class="media-object" src="/static/image/demo-course.jpg" />
+        <div class="thumbnail search-thumbnail" id="course-card">
+          <img v-show="!course.image" class="media-object" src="/static/image/demo-course.jpg"/>
           <img v-show="course.image" class="media-object" v-bind:src="course.image" />
           <div class="caption">
             <div class="clearfix">
@@ -49,7 +49,7 @@
             <p>
               <span class="blue bolder bigger-150">{{course.price}}&nbsp;<i class="fa fa-rmb"></i></span>&nbsp;
             </p>
-            <p>{{course.summary}}</p>
+            <p id="course-summary">{{course.summary}}</p>
             <p>
               <span class="badge badge-info">{{course.id}}</span>
               <span class="badge badge-info">排序：{{course.sort}}</span>
@@ -493,6 +493,13 @@
 </script>
 
 <style scoped>
+  #course-card{
+    height: 650px;
+  }
+  #course-summary{
+    height: 110px;
+  }
+
   .caption h3 {
     font-size: 20px;
   }

@@ -452,6 +452,14 @@
 
                 <b class="arrow"></b>
               </li>
+              <li v-show="hasResource('0209')" class="" id="business-line-sidebar">
+                <router-link to="/business/line">
+                  <i class="menu-icon fa fa-caret-right"></i>
+                  路线管理
+                </router-link>
+
+                <b class="arrow"></b>
+              </li>
             </ul>
           </li>
 
