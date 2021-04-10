@@ -17,19 +17,22 @@
     <table id="simple-table" class="table  table-bordered table-hover">
       <thead>
       <tr>
-                    <th>id</th>
-            <th>标题</th>
-            <th>详细描述</th>
+        <th>id</th>
+        <th>路线标题</th>
+        <th>详细描述</th>
         <th>操作</th>
       </tr>
       </thead>
 
       <tbody>
       <tr v-for="line in lines">
-              <td>{{line.id}}</td>
-              <td>{{line.title}}</td>
-              <td>{{line.desc}}</td>
+        <td>{{line.id}}</td>
+        <td>{{line.title}}</td>
+        <td>{{line.desc}}</td>
         <td>
+          <button v-on:click="toCourseLine(line)" class="btn btn-white btn-xs btn-info btn-round">
+            课程路线
+          </button>&nbsp;
           <div class="hidden-sm hidden-xs btn-group">
             <button v-on:click="edit(line)" class="btn btn-xs btn-info">
               <i class="ace-icon fa fa-pencil bigger-120"></i>
@@ -178,7 +181,16 @@
             }
           })
         });
-      }
+      },
+
+      /**
+       * 点击【课程路线】
+       */
+      toCourseLine(line) {
+        let _this = this;
+        SessionStorage.set(SESSION_KEY_LINE, line);
+        _this.$router.push("/business/courseLine");
+      },
     }
   }
 </script>
