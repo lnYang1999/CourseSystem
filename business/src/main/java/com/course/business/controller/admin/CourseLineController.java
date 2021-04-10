@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@RestController
+@RestController("adminCourseLineController")
 @RequestMapping("/admin/courseLine")
 public class CourseLineController {
 

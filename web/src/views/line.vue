@@ -21,9 +21,6 @@
             <div class="lineitem">
               <h2>{{line.title}}</h2>
               <p>{{line.desc}}</p>
-              <div class="pathinfo">
-                <span>4门课</span>
-              </div>
             </div>
           </div>
         </div>

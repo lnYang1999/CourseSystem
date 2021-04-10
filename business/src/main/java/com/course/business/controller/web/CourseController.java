@@ -40,6 +40,17 @@ public class CourseController {
     /**
      * 列表查询
      */
+    @PostMapping("/all")
+    public ResponseDto all() {
+        ResponseDto responseDto = new ResponseDto();
+        List<CourseDto> courseDtoList = courseService.all();
+        responseDto.setContent(courseDtoList);
+        return responseDto;
+    }
+
+    /**
+     * 列表查询
+     */
     @PostMapping("/list")
     public ResponseDto list(@RequestBody CoursePageDto pageDto) {
         ResponseDto responseDto = new ResponseDto();
