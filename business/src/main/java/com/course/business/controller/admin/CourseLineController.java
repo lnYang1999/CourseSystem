@@ -1,7 +1,7 @@
 package com.course.business.controller.admin;
 
 import com.course.server.dto.CourseLineDto;
-import com.course.server.dto.PageDto;
+import com.course.server.dto.CourseLinePageDto;
 import com.course.server.dto.ResponseDto;
 import com.course.server.service.CourseLineService;
 import com.course.server.util.ValidatorUtil;
@@ -25,10 +25,11 @@ public class CourseLineController {
      * 列表查询
      */
     @PostMapping("/list")
-    public ResponseDto list(@RequestBody PageDto pageDto) {
+    public ResponseDto list(@RequestBody CourseLinePageDto courseLinePageDto) {
         ResponseDto responseDto = new ResponseDto();
-        courseLineService.list(pageDto);
-        responseDto.setContent(pageDto);
+        ValidatorUtil.require(courseLinePageDto.getLineId(), "学习路线ID");
+        courseLineService.list(courseLinePageDto);
+        responseDto.setContent(courseLinePageDto);
         return responseDto;
     }
 

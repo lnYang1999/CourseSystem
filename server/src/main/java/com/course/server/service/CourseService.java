@@ -1,8 +1,6 @@
 package com.course.server.service;
 
-import com.course.server.domain.Course;
-import com.course.server.domain.CourseContent;
-import com.course.server.domain.CourseExample;
+import com.course.server.domain.*;
 import com.course.server.dto.*;
 import com.course.server.enums.CourseStatusEnum;
 import com.course.server.mapper.CourseContentMapper;
@@ -47,6 +45,15 @@ public class CourseService {
 
     @Resource
     private SectionService sectionService;
+
+    /**
+     * 列表查询
+     */
+    public List<CourseDto> all() {
+        CourseExample courseExample = new CourseExample();
+        List<Course> courseList = courseMapper.selectByExample(courseExample);
+        return CopyUtil.copyList(courseList, CourseDto.class);
+    }
 
     /**
      * 列表查询：关联课程分类表

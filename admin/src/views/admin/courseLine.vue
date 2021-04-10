@@ -29,14 +29,16 @@
       <tr>
         <th>id</th>
         <th>课程id</th>
+        <th>课程名称</th>
         <th>操作</th>
       </tr>
       </thead>
 
       <tbody>
       <tr v-for="courseLine in courseLines">
-              <td>{{courseLine.id}}</td>
-              <td>{{courseLine.courseId}}</td>
+        <td>{{courseLine.id}}</td>
+        <td>{{courseLine.courseId}}</td>
+        <td v-for="course in courses.filter(c=>{return c.id===courseLine.courseId})">{{course.name}}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
             <button v-on:click="edit(courseLine)" class="btn btn-xs btn-info">
@@ -61,9 +63,11 @@
           <div class="modal-body">
             <form class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-2 control-label">课程id</label>
+                <label class="col-sm-2 control-label">课程</label>
                 <div class="col-sm-10">
-                  <input v-model="courseLine.courseId" class="form-control">
+                  <select v-model="courseLine.courseId" class="form-control">
+                    <option v-for="o in courses" v-bind:value="o.id">{{o.name}}</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
@@ -94,6 +98,8 @@
         courseLine: {},
         courseLines: [],
         line: {},
+        course: {},
+        courses: [],
       }
     },
     mounted: function() {
@@ -104,6 +110,7 @@
         _this.$router.push("/welcome");
       }
       _this.line = line;
+      _this.allCourse();
       _this.list(1);
       // sidebar激活样式方法一
       this.$parent.activeSidebar("business-line-sidebar");
@@ -192,7 +199,17 @@
             }
           })
         });
-      }
+      },
+
+      allCourse() {
+        let _this = this;
+        Loading.show();
+        _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/course/all').then((response)=>{
+          Loading.hide();
+          let resp = response.data;
+          _this.courses = resp.content;
+        })
+      },
     }
   }
 </script>
