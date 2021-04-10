@@ -70,7 +70,7 @@
   }, {
     "id": "0210", "name": "课程路线管理", "page": "business/courseLine",
     "children": [
-      {"id": "021001", "name": "增删改查", "request": ["/business/admin/courseLine"]}
+      {"id": "021001", "name": "增删改查", "request": ["/business/admin/courseLine","/business/admin/course"]}
     ]
   }]
 }, {

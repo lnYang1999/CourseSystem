@@ -1,6 +1,16 @@
 <template>
   <div>
+    <h4 class="lighter">
+      <i class="ace-icon fa fa-hand-o-right icon-animated-hand-pointer blue"></i>
+      <router-link to="/business/line" class="pink"> {{line.title}} </router-link>
+    </h4>
+    <hr>
     <p>
+      <router-link to="/business/line" class="btn btn-white btn-default btn-round">
+        <i class="ace-icon fa fa-arrow-left"></i>
+        返回路线
+      </router-link>
+      &nbsp;
       <button v-on:click="add()" class="btn btn-white btn-default btn-round">
         <i class="ace-icon fa fa-edit"></i>
         新增
@@ -17,9 +27,8 @@
     <table id="simple-table" class="table  table-bordered table-hover">
       <thead>
       <tr>
-                    <th>id</th>
-            <th>学习路线id</th>
-            <th>课程id</th>
+        <th>id</th>
+        <th>课程id</th>
         <th>操作</th>
       </tr>
       </thead>
@@ -27,7 +36,6 @@
       <tbody>
       <tr v-for="courseLine in courseLines">
               <td>{{courseLine.id}}</td>
-              <td>{{courseLine.lineId}}</td>
               <td>{{courseLine.courseId}}</td>
         <td>
           <div class="hidden-sm hidden-xs btn-group">
@@ -52,18 +60,18 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">学习路线id</label>
-                      <div class="col-sm-10">
-                        <input v-model="courseLine.lineId" class="form-control">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label">课程id</label>
-                      <div class="col-sm-10">
-                        <input v-model="courseLine.courseId" class="form-control">
-                      </div>
-                    </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">课程id</label>
+                <div class="col-sm-10">
+                  <input v-model="courseLine.courseId" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">路线</label>
+                <div class="col-sm-10">
+                  <p class="form-control-static">{{line.title}}</p>
+                </div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -85,14 +93,20 @@
       return {
         courseLine: {},
         courseLines: [],
+        line: {},
       }
     },
     mounted: function() {
       let _this = this;
       _this.$refs.pagination.size = 5;
+      let line = SessionStorage.get(SESSION_KEY_LINE) || {};
+      if (Tool.isEmpty(line)) {
+        _this.$router.push("/welcome");
+      }
+      _this.line = line;
       _this.list(1);
       // sidebar激活样式方法一
-      // this.$parent.activeSidebar("business-courseLine-sidebar");
+      this.$parent.activeSidebar("business-line-sidebar");
 
     },
     methods: {
@@ -123,6 +137,7 @@
         _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/courseLine/list', {
           page: page,
           size: _this.$refs.pagination.size,
+          lineId: _this.line.id
         }).then((response)=>{
           Loading.hide();
           let resp = response.data;
@@ -140,11 +155,12 @@
 
         // 保存校验
         if (1 != 1
-                || !Validator.require(_this.courseLine.lineId, "学习路线id")
-                || !Validator.require(_this.courseLine.courseId, "课程id")
+                || !Validator.length(_this.courseLine.lineId, "学习路线Id", 1, 8)
+                || !Validator.length(_this.courseLine.courseId, "课程ID", 1, 8)
         ) {
           return;
         }
+        _this.courseLine.lineId = _this.line.id;
 
         Loading.show();
         _this.$ajax.post(process.env.VUE_APP_SERVER + '/business/admin/courseLine/save', _this.courseLine).then((response)=>{
