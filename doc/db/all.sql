@@ -326,7 +326,7 @@ create table `course_line` (
 ) engine=innodb default charset=utf8mb4 comment='课程路线';
 
 insert into course_line values ('00000001','00000001','mHsP38rg');
-insert into course_line values ('00000001','00000001','z4wmAyEq');
+insert into course_line values ('00000002','00000001','z4wmAyEq');
 
 # ---------------------- 测试
 
