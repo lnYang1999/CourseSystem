@@ -46,6 +46,8 @@ insert into `chapter` (id, course_id, name) values ('00000012', '00000000', '测
 insert into `chapter` (id, course_id, name) values ('00000013', '00000000', '测试大章13');
 insert into `chapter` (id, course_id, name) values ('00000014', '00000000', '测试大章14');
 
+alter table `chapter` add column (`sort` int comment '顺序');
+
 -- 小节
 drop table if exists `section`;
 create table `section` (
