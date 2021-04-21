@@ -29,6 +29,7 @@
     <tr>
       <th>ID</th>
       <th>名称</th>
+      <th>顺序</th>
       <th>操作</th>
     </tr>
     </thead>
@@ -37,6 +38,7 @@
     <tr v-for="chapter in chapters">
       <td>{{chapter.id}}</td>
       <td>{{chapter.name}}</td>
+      <td>{{chapter.sort}}</td>
       <td>
         <div class="hidden-sm hidden-xs btn-group">
           <button v-on:click="toSection(chapter)" class="btn btn-white btn-xs btn-info btn-round">
@@ -67,6 +69,12 @@
                 <label class="col-sm-2 control-label">名称</label>
                 <div class="col-sm-10">
                   <input v-model="chapter.name" class="form-control" placeholder="名称">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">顺序</label>
+                <div class="col-sm-10">
+                  <input v-model="chapter.sort" class="form-control">
                 </div>
               </div>
               <div class="form-group">

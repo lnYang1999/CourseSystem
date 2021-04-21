@@ -31,6 +31,7 @@ public class ChapterService {
         if (!StringUtils.isEmpty(chapterPageDto.getCourseId())) {
             criteria.andCourseIdEqualTo(chapterPageDto.getCourseId());
         }
+        chapterExample.setOrderByClause("sort asc");
         List<Chapter> chapterList = chapterMapper.selectByExample(chapterExample);
         PageInfo<Chapter> pageInfo = new PageInfo<>(chapterList);
         chapterPageDto.setTotal(pageInfo.getTotal());
@@ -78,6 +79,7 @@ public class ChapterService {
     public List<ChapterDto> listByCourse(String courseId) {
         ChapterExample example = new ChapterExample();
         example.createCriteria().andCourseIdEqualTo(courseId);
+        example.setOrderByClause("sort asc");
         List<Chapter> chapterList = chapterMapper.selectByExample(example);
         List<ChapterDto> chapterDtoList = CopyUtil.copyList(chapterList, ChapterDto.class);
         return chapterDtoList;
